@@ -6,7 +6,6 @@ m_next_free_entity: .ds 2
 max_entities: .db 10
 
 m_function_given_forall: .dw #0x0000
-m_test_delete: .dw #0x4038
 
 ;;Creates an entitiy coping zeros in their values
 ;;Intialize the pointer of the next free entity.
@@ -55,8 +54,12 @@ man_entity_forall::
         jr z, entity_no_valid
 
         ;;Call the funcion given registered in m_function_given_forall
-        call (#m_test_delete)
+		ld ix, #position_after_function_given
+		push ix
 
+		ld ix, (#m_function_given_forall)
+		jp (ix)
+		position_after_function_given:
         ;;Add 5 to hl to move to the next entitysys_physics_update_one_entity
         ld a, #0x05
             repeat_inc_hl:

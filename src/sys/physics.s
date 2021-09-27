@@ -34,7 +34,6 @@ sys_physics_update_one_entity::
         ;;TODO: destroy
     no_zero:
 
-
 ret
 
 sys_physics_update::

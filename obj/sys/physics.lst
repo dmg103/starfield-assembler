@@ -39,11 +39,10 @@ Hexadecimal [16-Bits]
                              34         ;;TODO: destroy
    0011                      35     no_zero:
                              36 
-                             37 
-   0011 C9            [10]   38 ret
-                             39 
-   0012                      40 sys_physics_update::
-   0012 11 00 00      [10]   41     ld de, #sys_physics_update_one_entity
-   0015 CD 00 00      [17]   42     call man_entity_forall
-                             43 
-   0018 C9            [10]   44 ret
+   0011 C9            [10]   37 ret
+                             38 
+   0012                      39 sys_physics_update::
+   0012 11 00 00      [10]   40     ld de, #sys_physics_update_one_entity
+   0015 CD 00 00      [17]   41     call man_entity_forall
+                             42 
+   0018 C9            [10]   43 ret

@@ -11,72 +11,75 @@ Hexadecimal [16-Bits]
    0034 0A                    6 max_entities: .db 10
                               7 
    0035 00 00                 8 m_function_given_forall: .dw #0x0000
-   0037 38 40                 9 m_test_delete: .dw #0x4038
-                             10 
-                             11 ;;Creates an entitiy coping zeros in their values
-                             12 ;;Intialize the pointer of the next free entity.
-                             13 ;;Changes de, a, bc, hl
-   0039                      14 man_entity_init::
-                             15 
-                             16     ;;Filling up with zeros
-   0039 11 00 00      [10]   17     ld de, #m_entities
-   003C 3E 00         [ 7]   18     ld a, #0x00
-   003E 01 32 00      [10]   19     ld bc, #50
-                             20 
-   0041 CD 00 00      [17]   21     call cpct_memset_asm
-                             22     
-                             23     ;;Next free entity should point towards m_entities
-   0044 21 00 00      [10]   24     ld hl, #m_entities
-   0047 22 32 00      [16]   25     ld (m_next_free_entity), hl
-   004A C9            [10]   26 ret
-                             27     
-                             28 ;;Charges into de the next free entity memory direction
-                             29 ;;Changes de, bc, hl
-   004B                      30 man_entity_create::
-                             31     ;;Saving the next free memory direction of m_entities into de
-   004B ED 5B 32 00   [20]   32     ld de, (m_next_free_entity)
-                             33 
-   004F 01 05 00      [10]   34     ld bc, #0x0005
-   0052 2A 32 00      [16]   35     ld hl, (m_next_free_entity)
-                             36     
-   0055 09            [11]   37     add hl, bc
-   0056 22 32 00      [16]   38     ld (m_next_free_entity), hl
-   0059 C9            [10]   39 ret
-                             40 
-                             41 ;;Prerequirements
-                             42 ;;      -DE should have the memory direction for the function given
-                             43 ;;Changes a, hl, de
-   005A                      44 man_entity_forall::
-   005A 21 00 00      [10]   45     ld hl, #m_entities
-                             46     ;;Keeping the function adress in a variable to use it.
-   005D ED 53 35 00   [20]   47     ld (m_function_given_forall), de
-                             48 
-   0061 ED 5B 34 00   [20]   49     ld de, (#max_entities)
-   0065 16 00         [ 7]   50     ld d, #0x00
-   0067                      51         repeat_man_entity_forall:
-                             52         ;;Compare against type to know if we should continue looping
-   0067 7E            [ 7]   53         ld a, (hl)
-   0068 C6 00         [ 7]   54         add a, #0x00 
-   006A 28 0C         [12]   55         jr z, entity_no_valid
+                              9 
+                             10 ;;Creates an entitiy coping zeros in their values
+                             11 ;;Intialize the pointer of the next free entity.
+                             12 ;;Changes de, a, bc, hl
+   0037                      13 man_entity_init::
+                             14 
+                             15     ;;Filling up with zeros
+   0037 11 00 00      [10]   16     ld de, #m_entities
+   003A 3E 00         [ 7]   17     ld a, #0x00
+   003C 01 32 00      [10]   18     ld bc, #50
+                             19 
+   003F CD 00 00      [17]   20     call cpct_memset_asm
+                             21     
+                             22     ;;Next free entity should point towards m_entities
+   0042 21 00 00      [10]   23     ld hl, #m_entities
+   0045 22 32 00      [16]   24     ld (m_next_free_entity), hl
+   0048 C9            [10]   25 ret
+                             26     
+                             27 ;;Charges into de the next free entity memory direction
+                             28 ;;Changes de, bc, hl
+   0049                      29 man_entity_create::
+                             30     ;;Saving the next free memory direction of m_entities into de
+   0049 ED 5B 32 00   [20]   31     ld de, (m_next_free_entity)
+                             32 
+   004D 01 05 00      [10]   33     ld bc, #0x0005
+   0050 2A 32 00      [16]   34     ld hl, (m_next_free_entity)
+                             35     
+   0053 09            [11]   36     add hl, bc
+   0054 22 32 00      [16]   37     ld (m_next_free_entity), hl
+   0057 C9            [10]   38 ret
+                             39 
+                             40 ;;Prerequirements
+                             41 ;;      -DE should have the memory direction for the function given
+                             42 ;;Changes a, hl, de
+   0058                      43 man_entity_forall::
+   0058 21 00 00      [10]   44     ld hl, #m_entities
+                             45     ;;Keeping the function adress in a variable to use it.
+   005B ED 53 35 00   [20]   46     ld (m_function_given_forall), de
+                             47 
+   005F ED 5B 34 00   [20]   48     ld de, (#max_entities)
+   0063 16 00         [ 7]   49     ld d, #0x00
+   0065                      50         repeat_man_entity_forall:
+                             51         ;;Compare against type to know if we should continue looping
+   0065 7E            [ 7]   52         ld a, (hl)
+   0066 C6 00         [ 7]   53         add a, #0x00 
+   0068 28 15         [12]   54         jr z, entity_no_valid
+                             55 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 2.
 Hexadecimal [16-Bits]
 
 
 
-                             56 
-                             57         ;;Call the funcion given registered in m_function_given_forall
-   006C CD 37 00      [17]   58         call (#m_test_delete)
+                             56         ;;Call the funcion given registered in m_function_given_forall
+   006A DD 21 76 00   [14]   57 		ld ix, #position_after_function_given
+   006E DD E5         [15]   58 		push ix
                              59 
-                             60         ;;Add 5 to hl to move to the next entitysys_physics_update_one_entity
-   006F 3E 05         [ 7]   61         ld a, #0x05
-   0071                      62             repeat_inc_hl:
-   0071 23            [ 6]   63             inc hl
-   0072 3D            [ 4]   64             dec a
-   0073 20 FC         [12]   65         jr nz, repeat_inc_hl
-                             66 
-                             67         ;;Decrement a to loop among the entities
-   0075 1D            [ 4]   68         dec e
-   0076 20 EF         [12]   69     jr nz, repeat_man_entity_forall
-   0078                      70     entity_no_valid:
-   0078 C9            [10]   71 ret
-                             72 
+   0070 DD 2A 35 00   [20]   60 		ld ix, (#m_function_given_forall)
+   0074 DD E9         [ 8]   61 		jp (ix)
+   0076                      62 		position_after_function_given:
+                             63         ;;Add 5 to hl to move to the next entitysys_physics_update_one_entity
+   0076 3E 05         [ 7]   64         ld a, #0x05
+   0078                      65             repeat_inc_hl:
+   0078 23            [ 6]   66             inc hl
+   0079 3D            [ 4]   67             dec a
+   007A 20 FC         [12]   68         jr nz, repeat_inc_hl
+                             69 
+                             70         ;;Decrement a to loop among the entities
+   007C 1D            [ 4]   71         dec e
+   007D 20 E6         [12]   72     jr nz, repeat_man_entity_forall
+   007F                      73     entity_no_valid:
+   007F C9            [10]   74 ret
+                             75 

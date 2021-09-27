@@ -4436,33 +4436,33 @@ Hexadecimal [16-Bits]
                              26 
    4005                      27 create_entity:
                              28 
-   4005 CD 9C 40      [17]   29 	call man_entity_create
+   4005 CD 9A 40      [17]   29 	call man_entity_create
                              30 
                              31 	;;After call man_entity_create, de has the next free entity memory direction 
                              32 
    4008 21 00 40      [10]   33 	ld hl, #init_e
    400B 01 05 00      [10]   34 	ld bc, #0x0005
                              35 
-   400E CD F4 40      [17]   36 	call cpct_memcpy_asm
+   400E CD FB 40      [17]   36 	call cpct_memcpy_asm
    4011 C9            [10]   37 ret
                              38 
    4012                      39 _main::
                              40 	;;Initialize cpctelera render setting
-   4012 CD F7 40      [17]   41 	call    _cpct_disableFirmware
+   4012 CD FE 40      [17]   41 	call    _cpct_disableFirmware
                              42 
    4015 2E 00         [ 7]   43 	ld l, #0x00
-   4017 CD D6 40      [17]   44    	call	_cpct_setVideoMode
+   4017 CD DD 40      [17]   44    	call	_cpct_setVideoMode
                              45 
                              46 	;;set border
    401A 21 10 14      [10]   47 	ld hl, #0x1410
    401D E5            [11]   48 	push    hl ;;ojo
-   401E CD CA 40      [17]   49 	call	_cpct_setPALColour
+   401E CD D1 40      [17]   49 	call	_cpct_setPALColour
                              50 
    4021 21 00 14      [10]   51 	ld hl, #0x1400
    4024 E5            [11]   52 	push    hl ;;ojo
-   4025 CD CA 40      [17]   53 	call	_cpct_setPALColour
+   4025 CD D1 40      [17]   53 	call	_cpct_setPALColour
                              54 
-   4028 CD 8A 40      [17]   55 	call man_entity_init
+   4028 CD 88 40      [17]   55 	call man_entity_init
                              56 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 84.
 Hexadecimal [16-Bits]

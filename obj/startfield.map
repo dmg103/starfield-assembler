@@ -98,8 +98,8 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000106  Key_6                              cpct_keyboard
      00000107  Key_4                              cpct_keyboard
      00000108  Key_1                              cpct_keyboard
-     00000108  l__CODE                         
      00000109  Joy0_Up                            cpct_keyboard
+     0000010F  l__CODE                         
      00000200  Key_CursorRight                    cpct_keyboard
      00000201  Key_Copy                           cpct_keyboard
      00000202  Key_OpenBracket                    cpct_keyboard
@@ -186,7 +186,7 @@ Area                                    Addr        Size        Decimal Bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00004108  s__DATA                         
+     0000410F  s__DATA                         
      00007F00  GA_port                            cpct_keyboard
      00008000  Key_FDot                           cpct_keyboard
      00008001  Key_F0                             cpct_keyboard
@@ -204,7 +204,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_CODE                               00004000    00000108 =         264. bytes (REL,CON)
+_CODE                               00004000    0000010F =         271. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -220,23 +220,23 @@ _CODE                               00004000    00000108 =         264. bytes (R
      00004083  m_next_free_entity                 
      00004085  max_entities                       
      00004086  m_function_given_forall            
-     00004088  m_test_delete                      
-     0000408A  man_entity_init                    
-     0000409C  man_entity_create                  
-     000040AB  man_entity_forall                  
-     000040B8  repeat_man_entity_forall           
-     000040C2  repeat_inc_hl                      
-     000040C9  entity_no_valid                    
-     000040CA  _cpct_setPALColour                 cpct_video
-     000040D6  _cpct_setVideoMode                 cpct_video
-     000040E4  _cpct_memcpy                       cpct_memutils
-     000040EC  cpct_memset_asm                    cpct_memutils
-     000040F4  cpct_memcpy_asm                    cpct_memutils
-     000040F7  _cpct_disableFirmware              cpct_firmware
-     000040F7  _cpct_removeInterruptHandler       cpct_firmware
-     000040F7  cpct_disableFirmware_asm           cpct_firmware
-     000040F7  cpct_removeInterruptHandler_asm    cpct_firmware
-     00004107  _cpct_mode_rom_status              cpct_firmware
+     00004088  man_entity_init                    
+     0000409A  man_entity_create                  
+     000040A9  man_entity_forall                  
+     000040B6  repeat_man_entity_forall           
+     000040C7  position_after_function_given      
+     000040C9  repeat_inc_hl                      
+     000040D0  entity_no_valid                    
+     000040D1  _cpct_setPALColour                 cpct_video
+     000040DD  _cpct_setVideoMode                 cpct_video
+     000040EB  _cpct_memcpy                       cpct_memutils
+     000040F3  cpct_memset_asm                    cpct_memutils
+     000040FB  cpct_memcpy_asm                    cpct_memutils
+     000040FE  _cpct_disableFirmware              cpct_firmware
+     000040FE  _cpct_removeInterruptHandler       cpct_firmware
+     000040FE  cpct_disableFirmware_asm           cpct_firmware
+     000040FE  cpct_removeInterruptHandler_asm    cpct_firmware
+     0000410E  _cpct_mode_rom_status              cpct_firmware
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 6.
 
@@ -249,19 +249,19 @@ obj/man/entity.rel                        [  ]
 
 Libraries Linked                          [ object file ]
 
-/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_setPALColour_cbindings.rel ]
-/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_setVideoMode_cbindings.rel ]
-/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_memcpy_cbindings.rel ]
-/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_memset_asmbinding.rel ]
-/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_memcpy_asmbindings.rel ]
-/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_removeInterruptHandler.rel ]
-/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpc_mode_rom_status.rel ]
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 7.
