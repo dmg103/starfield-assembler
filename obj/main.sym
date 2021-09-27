@@ -177,12 +177,13 @@ Symbol Table
     cpct_page80_asm                                             =  0020 G
     cpct_pageC0_asm                                             =  0030 G
   0 create_entity                                                  0005 GR
-  0 init_e                                                         0000 GR
+  0 game_loop                                                      0033 GR
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 4.
 Hexadecimal [16-Bits]
 
 Symbol Table
 
+  0 init_e                                                         0000 GR
     man_entity_create                                              **** GX
     man_entity_init                                                **** GX
     opc_DI                                                      =  00F3 G
@@ -191,6 +192,7 @@ Symbol Table
     opc_LD_D                                                    =  0016 G
   0 repeat                                                         002D GR
     sys_physics_update                                             **** GX
+    sys_render_update                                              **** GX
 
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 5.
@@ -198,6 +200,6 @@ Hexadecimal [16-Bits]
 
 Area Table
 
-   0 _CODE                                      size   38   flags    0
+   0 _CODE                                      size   3B   flags    0
    1 _DATA                                      size    0   flags    0
 

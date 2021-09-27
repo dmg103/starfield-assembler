@@ -7,7 +7,7 @@ Area                                    Addr        Size        Decimal Bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000000  .__.ABS.                           cpct_firmware
+     00000000  .__.ABS.                           cpct_video
      00000000  .__.CPU.                           
      00000000  .__.H$L.                           
      00000000  FW_BLACK                           cpct_keyboard
@@ -99,7 +99,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000107  Key_4                              cpct_keyboard
      00000108  Key_1                              cpct_keyboard
      00000109  Joy0_Up                            cpct_keyboard
-     0000010F  l__CODE                         
+     00000198  l__CODE                         
      00000200  Key_CursorRight                    cpct_keyboard
      00000201  Key_Copy                           cpct_keyboard
      00000202  Key_OpenBracket                    cpct_keyboard
@@ -186,7 +186,7 @@ Area                                    Addr        Size        Decimal Bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000410F  s__DATA                         
+     00004198  s__DATA                         
      00007F00  GA_port                            cpct_keyboard
      00008000  Key_FDot                           cpct_keyboard
      00008001  Key_F0                             cpct_keyboard
@@ -204,7 +204,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_CODE                               00004000    0000010F =         271. bytes (REL,CON)
+_CODE                               00004000    00000198 =         408. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -212,57 +212,75 @@ _CODE                               00004000    0000010F =         271. bytes (R
      00004005  create_entity                      cpct_keyboard
      00004012  _main                              cpct_keyboard
      0000402D  repeat                             cpct_keyboard
-     00004038  sys_physics_update_one_entity      
-     00004049  destroy_entity                     
-     00004049  no_zero                            
-     0000404A  sys_physics_update                 
-     00004051  m_entities                         
-     00004083  m_next_free_entity                 
-     00004085  max_entities                       
-     00004086  m_function_given_forall            
-     00004088  man_entity_init                    
-     0000409A  man_entity_create                  
-     000040A9  man_entity_forall                  
-     000040B6  repeat_man_entity_forall           
-     000040C7  position_after_function_given      
-     000040C9  repeat_inc_hl                      
-     000040D0  entity_no_valid                    
-     000040D1  _cpct_setPALColour                 cpct_video
-     000040DD  _cpct_setVideoMode                 cpct_video
-     000040EB  _cpct_memcpy                       cpct_memutils
-     000040F3  cpct_memset_asm                    cpct_memutils
-     000040FB  cpct_memcpy_asm                    cpct_memutils
-     000040FE  _cpct_disableFirmware              cpct_firmware
-     000040FE  _cpct_removeInterruptHandler       cpct_firmware
-     000040FE  cpct_disableFirmware_asm           cpct_firmware
-     000040FE  cpct_removeInterruptHandler_asm    cpct_firmware
-     0000410E  _cpct_mode_rom_status              cpct_firmware
-
+     00004033  game_loop                          cpct_keyboard
+     0000403B  sys_physics_update_one_entity      
+     0000404C  destroy_entity                     
+     00004052  no_zero                            
+     00004053  sys_physics_update                 
+     0000405A  sys_render_one_entity              
+     0000406D  sys_render_update                  
+     00004074  m_entities                         
+     000040A6  max_entities                       
+     000040A7  m_zero_type_at_the_end             
+     000040A8  m_next_free_entity                 
+     000040AA  m_num_entities                     
+     000040AB  m_function_given_forall            
+     000040AD  man_entity_init                    
+     000040BF  man_entity_create                  
+     000040D5  man_entity_forall                  
+     000040E2  repeat_man_entity_forall           
+     000040F3  position_after_function_given      
+     000040F5  repeat_inc_hl_forall               
+     000040FC  entity_no_valid                    
+     000040FD  man_entity_update                  
+     00004106  repeat_man_entity_update           
+     0000410E  repeat_inc_hl_update               
+     00004114  destroy_dead_entity                
+     00004117  continue                           
+     0000411B  man_entity_set4destruction         
+     00004121  man_entity_destroy                 
+     00004126  repeat_dec                         
+     0000412E  copy_memory                        
+     0000413B  man_entity_free_space              
+     00004146  _cpct_setPALColour                 cpct_video
+     00004152  _cpct_setVideoMode                 cpct_video
+     00004160  _cpct_memcpy                       cpct_memutils
+     00004168  cpct_memset_asm                    cpct_memutils
+     00004170  cpct_memcpy_asm                    cpct_memutils
+     00004173  _cpct_disableFirmware              cpct_firmware
+     00004173  _cpct_removeInterruptHandler       cpct_firmware
+     00004173  cpct_disableFirmware_asm           cpct_firmware
+     00004173  cpct_removeInterruptHandler_asm    cpct_firmware
+     00004183  _cpct_mode_rom_status              cpct_firmware
+     00004184  cpct_getScreenPtr_asm              cpct_video
 ASxxxx Linker V03.00 + NoICE + sdld,  page 6.
 
 Files Linked                              [ module(s) ]
 
 obj/main.rel                              [ cpct_keyboard ]
 obj/sys/physics.rel                       [  ]
+obj/sys/render.rel                        [  ]
 obj/man/entity.rel                        [  ]
 
 
 Libraries Linked                          [ object file ]
 
-/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_setPALColour_cbindings.rel ]
-/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_setVideoMode_cbindings.rel ]
-/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_memcpy_cbindings.rel ]
-/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_memset_asmbinding.rel ]
-/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_memcpy_asmbindings.rel ]
-/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_removeInterruptHandler.rel ]
-/home/oujymaximus/Documents/cpctelera/cpctelera/cpctelera.lib
+/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpc_mode_rom_status.rel ]
+/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
+                                          [ cpct_getScreenPtr_asmbindings.re ]
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 7.
 

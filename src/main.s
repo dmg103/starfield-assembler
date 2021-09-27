@@ -16,6 +16,7 @@
 
 ;;Systems
 .globl sys_physics_update
+.globl sys_render_update
 
 init_e:
 	.db #0x01	; 1 ;type
@@ -29,7 +30,6 @@ create_entity:
 	call man_entity_create
 
 	;;After call man_entity_create, de has the next free entity memory direction 
-
 	ld hl, #init_e
 	ld bc, #0x0005
 
@@ -61,9 +61,10 @@ _main::
 		dec a
 	jr nz, repeat
 
-	call sys_physics_update
-
-	jr .
+	game_loop:
+		call sys_physics_update
+		call sys_render_update
+	jr game_loop
 
 
 	

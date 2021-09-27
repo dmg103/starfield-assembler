@@ -1,59 +1,114 @@
 XL2
-H 1 areas 10 global symbols
+H 1 areas 1D global symbols
 S .__.H$L. Def0000
 S .__.ABS. Def0000
 S .__.CPU. Def0000
+S cpct_memcpy_asm Ref0000
 S cpct_memset_asm Ref0000
 S .__.$$$. Def2710
-A _CODE size 80 flags 0 addr 0
-S entity_no_valid Def007F
-S m_next_free_entity Def0032
-S m_function_given_forall Def0035
-S max_entities Def0034
-S man_entity_create Def0049
-S man_entity_init Def0037
-S repeat_inc_hl Def0078
-S man_entity_forall Def0058
-S position_after_function_given Def0076
+A _CODE size D2 flags 0 addr 0
+S entity_no_valid Def0088
+S m_next_free_entity Def0034
+S m_function_given_forall Def0037
+S max_entities Def0032
+S man_entity_set4destruction Def00A7
+S man_entity_create Def004B
+S man_entity_init Def0039
+S repeat_dec Def00B2
+S man_entity_forall Def0061
+S m_zero_type_at_the_end Def0033
+S man_entity_update Def0089
+S m_num_entities Def0036
+S man_entity_destroy Def00AD
+S position_after_function_given Def007F
+S man_entity_free_space Def00C7
+S continue Def00A3
+S repeat_inc_hl_forall Def0081
+S repeat_inc_hl_update Def009A
 S m_entities Def0000
-S repeat_man_entity_forall Def0065
+S copy_memory Def00BA
+S destroy_dead_entity Def00A0
+S repeat_man_entity_forall Def006E
+S repeat_man_entity_update Def0092
 T 00 00
 R 00 00 00 00
-T 32 00
+T 32 00 0A 00
 R 00 00 00 00
-T 34 00 0A 00 00
+T 34 00
 R 00 00 00 00
-T 37 00
+T 36 00 00 00 00
 R 00 00 00 00
-T 37 00 11 00 00 3E 00 01 32 00 CD 00 00 21 00 00
-R 00 00 00 00 00 03 00 00 02 0B 03 00 00 0E 00 00
-T 45 00 22 32 00 C9
+T 39 00
+R 00 00 00 00
+T 39 00 11 00 00 3E 00 01 32 00 CD 00 00 21 00 00
+R 00 00 00 00 00 03 00 00 02 0B 04 00 00 0E 00 00
+T 47 00 22 34 00 C9
 R 00 00 00 00 00 03 00 00
-T 49 00
+T 4B 00
 R 00 00 00 00
-T 49 00 ED 5B 32 00 01 05 00 2A 32 00 09 22 32 00
-R 00 00 00 00 00 04 00 00 00 0A 00 00 00 0E 00 00
-T 57 00 C9
+T 4B 00 ED 5B 34 00 01 05 00 2A 34 00 3A 36 00 3C
+R 00 00 00 00 00 04 00 00 00 0A 00 00 00 0D 00 00
+T 59 00 32 36 00 09 22 34 00 C9
+R 00 00 00 00 00 03 00 00 00 07 00 00
+T 61 00
 R 00 00 00 00
-T 58 00
-R 00 00 00 00
-T 58 00 21 00 00 ED 53 35 00 ED 5B 34 00 16 00
+T 61 00 21 00 00 ED 53 37 00 ED 5B 32 00 16 00
 R 00 00 00 00 00 03 00 00 00 07 00 00 00 0B 00 00
-T 65 00
+T 6E 00
 R 00 00 00 00
-T 65 00 7E C6 00 28 15 DD 21 76 00 DD E5 DD 2A
+T 6E 00 7E C6 00 28 15 DD 21 7F 00 DD E5 DD 2A
 R 00 00 00 00 00 09 00 00
-T 72 00 35 00 DD E9
+T 7B 00 37 00 DD E9
 R 00 00 00 00 00 02 00 00
-T 76 00
-R 00 00 00 00
-T 76 00 3E 05
-R 00 00 00 00
-T 78 00
-R 00 00 00 00
-T 78 00 23 3D 20 FC 1D 20 E6
-R 00 00 00 00
 T 7F 00
 R 00 00 00 00
-T 7F 00 C9
+T 7F 00 3E 05
 R 00 00 00 00
+T 81 00
+R 00 00 00 00
+T 81 00 23 3D 20 FC 1D 20 E6
+R 00 00 00 00
+T 88 00
+R 00 00 00 00
+T 88 00 C9
+R 00 00 00 00
+T 89 00
+R 00 00 00 00
+T 89 00 21 00 00 ED 5B 36 00 16 00
+R 00 00 00 00 00 03 00 00 00 07 00 00
+T 92 00
+R 00 00 00 00
+T 92 00 7E 06 80 A0 20 08 3E 05
+R 00 00 00 00
+T 9A 00
+R 00 00 00 00
+T 9A 00 23 3D 20 FC 18 03
+R 00 00 00 00
+T A0 00
+R 00 00 00 00
+T A0 00 CD AD 00
+R 00 00 00 00 00 03 00 00
+T A3 00
+R 00 00 00 00
+T A3 00 1D 20 EC C9
+R 00 00 00 00
+T A7 00
+R 00 00 00 00
+T A7 00 7E 06 80 B0 77 C9
+R 00 00 00 00
+T AD 00
+R 00 00 00 00
+T AD 00 01 34 00 3E 05
+R 00 00 00 00 00 03 00 00
+T B2 00
+R 00 00 00 00
+T B2 00 0B 3D 20 FC 79 95 20 00
+R 00 00 00 00
+T BA 00
+R 00 00 00 00
+T BA 00 E5 54 5D 60 69 01 05 00 CD 00 00 E1 C9
+R 00 00 00 00 02 0B 03 00
+T C7 00
+R 00 00 00 00
+T C7 00 3A 36 00 ED 4B 32 00 06 00 91 C9
+R 00 00 00 00 00 03 00 00 00 07 00 00

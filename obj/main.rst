@@ -4426,43 +4426,43 @@ Hexadecimal [16-Bits]
                              16 
                              17 ;;Systems
                              18 .globl sys_physics_update
-                             19 
-   4000                      20 init_e:
-   4000 01                   21 	.db #0x01	; 1 ;type
-   4001 4F                   22 	.db #0x4f	; 79	'O' ;pos_x
-   4002 01                   23 	.db #0x01	; 1	;pos_y
-   4003 FF                   24 	.db #0xff	; -1 ;vel_x
-   4004 FF                   25 	.db #0xff	; 255 ;color
-                             26 
-   4005                      27 create_entity:
-                             28 
-   4005 CD 9A 40      [17]   29 	call man_entity_create
-                             30 
-                             31 	;;After call man_entity_create, de has the next free entity memory direction 
-                             32 
+                             19 .globl sys_render_update
+                             20 
+   4000                      21 init_e:
+   4000 01                   22 	.db #0x01	; 1 ;type
+   4001 4F                   23 	.db #0x4f	; 79	'O' ;pos_x
+   4002 01                   24 	.db #0x01	; 1	;pos_y
+   4003 FF                   25 	.db #0xff	; -1 ;vel_x
+   4004 FF                   26 	.db #0xff	; 255 ;color
+                             27 
+   4005                      28 create_entity:
+                             29 
+   4005 CD BF 40      [17]   30 	call man_entity_create
+                             31 
+                             32 	;;After call man_entity_create, de has the next free entity memory direction 
    4008 21 00 40      [10]   33 	ld hl, #init_e
    400B 01 05 00      [10]   34 	ld bc, #0x0005
                              35 
-   400E CD FB 40      [17]   36 	call cpct_memcpy_asm
+   400E CD 70 41      [17]   36 	call cpct_memcpy_asm
    4011 C9            [10]   37 ret
                              38 
    4012                      39 _main::
                              40 	;;Initialize cpctelera render setting
-   4012 CD FE 40      [17]   41 	call    _cpct_disableFirmware
+   4012 CD 73 41      [17]   41 	call    _cpct_disableFirmware
                              42 
    4015 2E 00         [ 7]   43 	ld l, #0x00
-   4017 CD DD 40      [17]   44    	call	_cpct_setVideoMode
+   4017 CD 52 41      [17]   44    	call	_cpct_setVideoMode
                              45 
                              46 	;;set border
    401A 21 10 14      [10]   47 	ld hl, #0x1410
    401D E5            [11]   48 	push    hl ;;ojo
-   401E CD D1 40      [17]   49 	call	_cpct_setPALColour
+   401E CD 46 41      [17]   49 	call	_cpct_setPALColour
                              50 
    4021 21 00 14      [10]   51 	ld hl, #0x1400
    4024 E5            [11]   52 	push    hl ;;ojo
-   4025 CD D1 40      [17]   53 	call	_cpct_setPALColour
+   4025 CD 46 41      [17]   53 	call	_cpct_setPALColour
                              54 
-   4028 CD 88 40      [17]   55 	call man_entity_init
+   4028 CD AD 40      [17]   55 	call man_entity_init
                              56 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 84.
 Hexadecimal [16-Bits]
@@ -4476,9 +4476,10 @@ Hexadecimal [16-Bits]
    4030 3D            [ 4]   61 		dec a
    4031 20 FA         [12]   62 	jr nz, repeat
                              63 
-   4033 CD 4A 40      [17]   64 	call sys_physics_update
-                             65 
-   4036 18 FE         [12]   66 	jr .
-                             67 
+   4033                      64 	game_loop:
+   4033 CD 53 40      [17]   65 		call sys_physics_update
+   4036 CD 6D 40      [17]   66 		call sys_render_update
+   4039 18 F8         [12]   67 	jr game_loop
                              68 
-                             69 	
+                             69 
+                             70 	

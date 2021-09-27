@@ -7,18 +7,31 @@ Symbol Table
     .__.ABS.                                                    =  0000 G
     .__.CPU.                                                    =  0000 GL
     .__.H$L.                                                    =  0000 GL
+  0 continue                                                       00A3 GR
+  0 copy_memory                                                    00BA GR
+    cpct_memcpy_asm                                                **** GX
     cpct_memset_asm                                                **** GX
-  0 entity_no_valid                                                007F GR
+  0 destroy_dead_entity                                            00A0 GR
+  0 entity_no_valid                                                0088 GR
   0 m_entities                                                     0000 GR
-  0 m_function_given_forall                                        0035 GR
-  0 m_next_free_entity                                             0032 GR
-  0 man_entity_create                                              0049 GR
-  0 man_entity_forall                                              0058 GR
-  0 man_entity_init                                                0037 GR
-  0 max_entities                                                   0034 GR
-  0 position_after_function_given                                  0076 GR
-  0 repeat_inc_hl                                                  0078 GR
-  0 repeat_man_entity_forall                                       0065 GR
+  0 m_function_given_forall                                        0037 GR
+  0 m_next_free_entity                                             0034 GR
+  0 m_num_entities                                                 0036 GR
+  0 m_zero_type_at_the_end                                         0033 GR
+  0 man_entity_create                                              004B GR
+  0 man_entity_destroy                                             00AD GR
+  0 man_entity_forall                                              0061 GR
+  0 man_entity_free_space                                          00C7 GR
+  0 man_entity_init                                                0039 GR
+  0 man_entity_set4destruction                                     00A7 GR
+  0 man_entity_update                                              0089 GR
+  0 max_entities                                                   0032 GR
+  0 position_after_function_given                                  007F GR
+  0 repeat_dec                                                     00B2 GR
+  0 repeat_inc_hl_forall                                           0081 GR
+  0 repeat_inc_hl_update                                           009A GR
+  0 repeat_man_entity_forall                                       006E GR
+  0 repeat_man_entity_update                                       0092 GR
 
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 2.
@@ -26,5 +39,5 @@ Hexadecimal [16-Bits]
 
 Area Table
 
-   0 _CODE                                      size   80   flags    0
+   0 _CODE                                      size   D2   flags    0
 

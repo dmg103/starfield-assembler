@@ -1,4 +1,6 @@
 .globl man_entity_forall
+.globl man_entity_destroy
+.globl man_entity_set4destruction
 
 ;;Prerequirements:
 ;;  Hl should have a pointer to the memory direction of the entity
@@ -31,7 +33,10 @@ sys_physics_update_one_entity::
     jr no_zero
     
     destroy_entity:
-        ;;TODO: destroy
+        dec hl
+        dec hl
+        dec hl
+        call man_entity_destroy
     no_zero:
 
 ret

@@ -1,0 +1,42 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 1.
+Hexadecimal [16-Bits]
+
+
+
+                              1 .globl man_entity_forall
+                              2 .globl cpct_getScreenPtr_asm
+                              3 
+                              4 ;;Prerequirements:
+                              5 ;;  Hl should have a pointer to the memory direction of the entity
+                              6 ;;Changes a, b, c 
+   0000                       7 sys_render_one_entity:
+                              8 
+                              9     ;;Pointer to the start of the screen
+   0000 11 00 C0      [10]   10     ld de, #0xC000
+                             11 
+                             12     ;;Pos_X
+   0003 23            [ 6]   13     inc hl
+   0004 7E            [ 7]   14     ld a, (hl) 
+   0005 4F            [ 4]   15     ld c, a
+                             16 
+                             17     ;;Pos_Y
+   0006 23            [ 6]   18     inc hl
+   0007 7E            [ 7]   19     ld a, (hl) 
+   0008 47            [ 4]   20     ld b, a
+                             21 
+                             22     ;;Coming back to the original entity direction
+   0009 2B            [ 6]   23     dec hl
+   000A 2B            [ 6]   24     dec hl
+                             25 
+   000B E5            [11]   26     push hl
+   000C CD 00 00      [17]   27     call cpct_getScreenPtr_asm
+                             28 
+   000F 36 88         [10]   29     ld (hl), #0x88
+                             30 
+   0011 E1            [10]   31     pop hl
+   0012 C9            [10]   32 ret
+                             33 
+   0013                      34 sys_render_update::
+   0013 11 00 00      [10]   35     ld de, #sys_render_one_entity
+   0016 CD 00 00      [17]   36     call man_entity_forall
+   0019 C9            [10]   37 ret

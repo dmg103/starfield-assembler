@@ -4426,20 +4426,20 @@ Hexadecimal [16-Bits]
                              16 
                              17 ;;Systems
                              18 .globl sys_physics_update
-                             19 
-   0000                      20 init_e:
-   0000 01                   21 	.db #0x01	; 1 ;type
-   0001 4F                   22 	.db #0x4f	; 79	'O' ;pos_x
-   0002 01                   23 	.db #0x01	; 1	;pos_y
-   0003 FF                   24 	.db #0xff	; -1 ;vel_x
-   0004 FF                   25 	.db #0xff	; 255 ;color
-                             26 
-   0005                      27 create_entity:
-                             28 
-   0005 CD 00 00      [17]   29 	call man_entity_create
-                             30 
-                             31 	;;After call man_entity_create, de has the next free entity memory direction 
-                             32 
+                             19 .globl sys_render_update
+                             20 
+   0000                      21 init_e:
+   0000 01                   22 	.db #0x01	; 1 ;type
+   0001 4F                   23 	.db #0x4f	; 79	'O' ;pos_x
+   0002 01                   24 	.db #0x01	; 1	;pos_y
+   0003 FF                   25 	.db #0xff	; -1 ;vel_x
+   0004 FF                   26 	.db #0xff	; 255 ;color
+                             27 
+   0005                      28 create_entity:
+                             29 
+   0005 CD 00 00      [17]   30 	call man_entity_create
+                             31 
+                             32 	;;After call man_entity_create, de has the next free entity memory direction 
    0008 21 00 00      [10]   33 	ld hl, #init_e
    000B 01 05 00      [10]   34 	ld bc, #0x0005
                              35 
@@ -4476,9 +4476,10 @@ Hexadecimal [16-Bits]
    0030 3D            [ 4]   61 		dec a
    0031 20 FA         [12]   62 	jr nz, repeat
                              63 
-   0033 CD 00 00      [17]   64 	call sys_physics_update
-                             65 
-   0036 18 FE         [12]   66 	jr .
-                             67 
+   0033                      64 	game_loop:
+   0033 CD 00 00      [17]   65 		call sys_physics_update
+   0036 CD 00 00      [17]   66 		call sys_render_update
+   0039 18 F8         [12]   67 	jr game_loop
                              68 
-                             69 	
+                             69 
+                             70 	
