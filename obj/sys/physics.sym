@@ -1,0 +1,22 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 1.
+Hexadecimal [16-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  2710 GL
+    .__.ABS.                                                    =  0000 G
+    .__.CPU.                                                    =  0000 GL
+    .__.H$L.                                                    =  0000 GL
+  0 destroy_entity                                                 0011 GR
+    man_entity_forall                                              **** GX
+  0 no_zero                                                        0011 GR
+  0 sys_physics_update                                             0012 GR
+  0 sys_physics_update_one_entity                                  0000 GR
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 2.
+Hexadecimal [16-Bits]
+
+Area Table
+
+   0 _CODE                                      size   19   flags    0
+

@@ -1,0 +1,30 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 1.
+Hexadecimal [16-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  2710 GL
+    .__.ABS.                                                    =  0000 G
+    .__.CPU.                                                    =  0000 GL
+    .__.H$L.                                                    =  0000 GL
+    cpct_memset_asm                                                **** GX
+  0 entity_no_valid                                                0078 GR
+  0 m_entities                                                     0000 GR
+  0 m_function_given_forall                                        0035 GR
+  0 m_next_free_entity                                             0032 GR
+  0 m_test_delete                                                  0037 GR
+  0 man_entity_create                                              004B GR
+  0 man_entity_forall                                              005A GR
+  0 man_entity_init                                                0039 GR
+  0 max_entities                                                   0034 GR
+  0 repeat_inc_hl                                                  0071 GR
+  0 repeat_man_entity_forall                                       0067 GR
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 2.
+Hexadecimal [16-Bits]
+
+Area Table
+
+   0 _CODE                                      size   79   flags    0
+

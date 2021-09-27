@@ -1,0 +1,53 @@
+XL2
+H 1 areas 10 global symbols
+S .__.H$L. Def0000
+S .__.ABS. Def0000
+S .__.CPU. Def0000
+S cpct_memset_asm Ref0000
+S .__.$$$. Def2710
+A _CODE size 79 flags 0 addr 0
+S entity_no_valid Def0078
+S m_next_free_entity Def0032
+S m_function_given_forall Def0035
+S max_entities Def0034
+S man_entity_create Def004B
+S man_entity_init Def0039
+S repeat_inc_hl Def0071
+S man_entity_forall Def005A
+S m_test_delete Def0037
+S m_entities Def0000
+S repeat_man_entity_forall Def0067
+T 00 00
+R 00 00 00 00
+T 32 00
+R 00 00 00 00
+T 34 00 0A 00 00 38 40
+R 00 00 00 00
+T 39 00
+R 00 00 00 00
+T 39 00 11 00 00 3E 00 01 32 00 CD 00 00 21 00 00
+R 00 00 00 00 00 03 00 00 02 0B 03 00 00 0E 00 00
+T 47 00 22 32 00 C9
+R 00 00 00 00 00 03 00 00
+T 4B 00
+R 00 00 00 00
+T 4B 00 ED 5B 32 00 01 05 00 2A 32 00 09 22 32 00
+R 00 00 00 00 00 04 00 00 00 0A 00 00 00 0E 00 00
+T 59 00 C9
+R 00 00 00 00
+T 5A 00
+R 00 00 00 00
+T 5A 00 21 00 00 ED 53 35 00 ED 5B 34 00 16 00
+R 00 00 00 00 00 03 00 00 00 07 00 00 00 0B 00 00
+T 67 00
+R 00 00 00 00
+T 67 00 7E C6 00 28 0C CD 37 00 3E 05
+R 00 00 00 00 00 08 00 00
+T 71 00
+R 00 00 00 00
+T 71 00 23 3D 20 FC 1D 20 EF
+R 00 00 00 00
+T 78 00
+R 00 00 00 00
+T 78 00 C9
+R 00 00 00 00
