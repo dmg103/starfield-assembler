@@ -41,7 +41,7 @@ Hexadecimal [16-Bits]
    0011 2B            [ 6]   36         dec hl
    0012 2B            [ 6]   37         dec hl
    0013 2B            [ 6]   38         dec hl
-   0014 CD 00 00      [17]   39         call man_entity_destroy
+   0014 CD 00 00      [17]   39         call man_entity_set4destruction
    0017                      40     no_zero:
                              41 
    0017 C9            [10]   42 ret

@@ -170,36 +170,37 @@ Symbol Table
     _cpct_memcpy                                                   **** GX
     _cpct_setPALColour                                             **** GX
     _cpct_setVideoMode                                             **** GX
-  0 _main                                                          0012 GR
+  0 _main                                                          0014 GR
     cpct_memcpy_asm                                                **** GX
     cpct_page00_asm                                             =  0000 G
     cpct_page40_asm                                             =  0010 G
     cpct_page80_asm                                             =  0020 G
     cpct_pageC0_asm                                             =  0030 G
-  0 create_entity                                                  0005 GR
-  0 game_loop                                                      0033 GR
+    cpct_waitVSYNC_asm                                             **** GX
+  0 create_entity                                                  0007 GR
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 4.
 Hexadecimal [16-Bits]
 
 Symbol Table
 
+  0 game_loop                                                      0035 GR
   0 init_e                                                         0000 GR
     man_entity_create                                              **** GX
     man_entity_init                                                **** GX
+    man_entity_update                                              **** GX
     opc_DI                                                      =  00F3 G
     opc_EI                                                      =  00FB G
     opc_JR                                                      =  0018 G
     opc_LD_D                                                    =  0016 G
-  0 repeat                                                         002D GR
+  0 repeat                                                         002F GR
     sys_physics_update                                             **** GX
     sys_render_update                                              **** GX
-
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 5.
 Hexadecimal [16-Bits]
 
 Area Table
 
-   0 _CODE                                      size   3B   flags    0
+   0 _CODE                                      size   4B   flags    0
    1 _DATA                                      size    0   flags    0
 

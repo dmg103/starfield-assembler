@@ -6,6 +6,7 @@
 ;;Manager
 .globl man_entity_init
 .globl man_entity_create
+.globl man_entity_update
 
 ;;Cpctelera video functions
 .globl _cpct_disableFirmware
@@ -13,10 +14,12 @@
 .globl _cpct_setVideoMode
 .globl _cpct_memcpy
 .globl cpct_memcpy_asm
+.globl cpct_waitVSYNC_asm
 
 ;;Systems
 .globl sys_physics_update
 .globl sys_render_update
+.globl sys_generator_update
 
 init_e:
 	.db #0x01	; 1 ;type
@@ -24,6 +27,7 @@ init_e:
 	.db #0x01	; 1	;pos_y
 	.db #0xff	; -1 ;vel_x
 	.db #0xff	; 255 ;color
+	.dw #0x0000	;previous ptr
 
 create_entity:
 
@@ -31,7 +35,7 @@ create_entity:
 
 	;;After call man_entity_create, de has the next free entity memory direction 
 	ld hl, #init_e
-	ld bc, #0x0005
+	ld bc, #0x0007
 
 	call cpct_memcpy_asm
 ret
@@ -55,16 +59,22 @@ _main::
 	call man_entity_init
 
 	;;Creates a register value entities
+	;;OJO! esta funcion esta cambiando a por eso el buclee parece qu peta
 	ld a, #0x05
 		repeat:
 		call create_entity
 		dec a
 	jr nz, repeat
 
-	game_loop:
-		call sys_physics_update
-		call sys_render_update
-	jr game_loop
+game_loop:
+	call sys_physics_update
+	call sys_generator_update
+	call sys_render_update
+
+	call man_entity_update
+	call cpct_waitVSYNC_asm
+
+jr game_loop
 
 
 	

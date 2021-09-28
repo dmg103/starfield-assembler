@@ -4416,70 +4416,86 @@ Hexadecimal [16-Bits]
                               6 ;;Manager
                               7 .globl man_entity_init
                               8 .globl man_entity_create
-                              9 
-                             10 ;;Cpctelera video functions
-                             11 .globl _cpct_disableFirmware
-                             12 .globl _cpct_setPALColour
-                             13 .globl _cpct_setVideoMode
-                             14 .globl _cpct_memcpy
-                             15 .globl cpct_memcpy_asm
-                             16 
-                             17 ;;Systems
-                             18 .globl sys_physics_update
-                             19 .globl sys_render_update
-                             20 
-   0000                      21 init_e:
-   0000 01                   22 	.db #0x01	; 1 ;type
-   0001 4F                   23 	.db #0x4f	; 79	'O' ;pos_x
-   0002 01                   24 	.db #0x01	; 1	;pos_y
-   0003 FF                   25 	.db #0xff	; -1 ;vel_x
-   0004 FF                   26 	.db #0xff	; 255 ;color
-                             27 
-   0005                      28 create_entity:
-                             29 
-   0005 CD 00 00      [17]   30 	call man_entity_create
-                             31 
-                             32 	;;After call man_entity_create, de has the next free entity memory direction 
-   0008 21 00 00      [10]   33 	ld hl, #init_e
-   000B 01 05 00      [10]   34 	ld bc, #0x0005
-                             35 
-   000E CD 00 00      [17]   36 	call cpct_memcpy_asm
-   0011 C9            [10]   37 ret
+                              9 .globl man_entity_update
+                             10 
+                             11 ;;Cpctelera video functions
+                             12 .globl _cpct_disableFirmware
+                             13 .globl _cpct_setPALColour
+                             14 .globl _cpct_setVideoMode
+                             15 .globl _cpct_memcpy
+                             16 .globl cpct_memcpy_asm
+                             17 .globl cpct_waitVSYNC_asm
+                             18 
+                             19 ;;Systems
+                             20 .globl sys_physics_update
+                             21 .globl sys_render_update
+                             22 
+   0000                      23 init_e:
+   0000 01                   24 	.db #0x01	; 1 ;type
+   0001 4F                   25 	.db #0x4f	; 79	'O' ;pos_x
+   0002 01                   26 	.db #0x01	; 1	;pos_y
+   0003 FF                   27 	.db #0xff	; -1 ;vel_x
+   0004 FF                   28 	.db #0xff	; 255 ;color
+   0005 00 00                29 	.dw #0x0000	;previous ptr
+                             30 
+   0007                      31 create_entity:
+                             32 
+   0007 CD 00 00      [17]   33 	call man_entity_create
+                             34 
+                             35 	;;After call man_entity_create, de has the next free entity memory direction 
+   000A 21 00 00      [10]   36 	ld hl, #init_e
+   000D 01 07 00      [10]   37 	ld bc, #0x0007
                              38 
-   0012                      39 _main::
-                             40 	;;Initialize cpctelera render setting
-   0012 CD 00 00      [17]   41 	call    _cpct_disableFirmware
-                             42 
-   0015 2E 00         [ 7]   43 	ld l, #0x00
-   0017 CD 00 00      [17]   44    	call	_cpct_setVideoMode
+   0010 CD 00 00      [17]   39 	call cpct_memcpy_asm
+   0013 C9            [10]   40 ret
+                             41 
+   0014                      42 _main::
+                             43 	;;Initialize cpctelera render setting
+   0014 CD 00 00      [17]   44 	call    _cpct_disableFirmware
                              45 
-                             46 	;;set border
-   001A 21 10 14      [10]   47 	ld hl, #0x1410
-   001D E5            [11]   48 	push    hl ;;ojo
-   001E CD 00 00      [17]   49 	call	_cpct_setPALColour
-                             50 
-   0021 21 00 14      [10]   51 	ld hl, #0x1400
-   0024 E5            [11]   52 	push    hl ;;ojo
-   0025 CD 00 00      [17]   53 	call	_cpct_setPALColour
-                             54 
-   0028 CD 00 00      [17]   55 	call man_entity_init
-                             56 
+   0017 2E 00         [ 7]   46 	ld l, #0x00
+   0019 CD 00 00      [17]   47    	call	_cpct_setVideoMode
+                             48 
+                             49 	;;set border
+   001C 21 10 14      [10]   50 	ld hl, #0x1410
+   001F E5            [11]   51 	push    hl ;;ojo
+   0020 CD 00 00      [17]   52 	call	_cpct_setPALColour
+                             53 
+   0023 21 00 14      [10]   54 	ld hl, #0x1400
+   0026 E5            [11]   55 	push    hl ;;ojo
+   0027 CD 00 00      [17]   56 	call	_cpct_setPALColour
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 84.
 Hexadecimal [16-Bits]
 
 
 
-                             57 	;;Creates a register value entities
-   002B 3E 05         [ 7]   58 	ld a, #0x05
-   002D                      59 		repeat:
-   002D CD 05 00      [17]   60 		call create_entity
-   0030 3D            [ 4]   61 		dec a
-   0031 20 FA         [12]   62 	jr nz, repeat
-                             63 
-   0033                      64 	game_loop:
-   0033 CD 00 00      [17]   65 		call sys_physics_update
-   0036 CD 00 00      [17]   66 		call sys_render_update
-   0039 18 F8         [12]   67 	jr game_loop
-                             68 
-                             69 
-                             70 	
+                             57 
+   002A CD 00 00      [17]   58 	call man_entity_init
+                             59 
+                             60 	;;Creates a register value entities
+                             61 	;;OJO! esta funcion esta cambiando a por eso el buclee parece qu peta
+   002D 3E 05         [ 7]   62 	ld a, #0x05
+   002F                      63 		repeat:
+   002F CD 07 00      [17]   64 		call create_entity
+   0032 3D            [ 4]   65 		dec a
+   0033 20 FA         [12]   66 	jr nz, repeat
+                             67 
+   0035                      68 game_loop:
+   0035 CD 00 00      [17]   69 	call sys_physics_update
+   0038 CD 00 00      [17]   70 	call sys_render_update
+                             71 
+   003B CD 00 00      [17]   72 	call man_entity_update
+   003E 76            [ 4]   73 	halt
+   003F 76            [ 4]   74 	halt
+   0040 76            [ 4]   75 	halt
+   0041 76            [ 4]   76 	halt
+   0042 76            [ 4]   77 	halt
+   0043 76            [ 4]   78 	halt
+   0044 76            [ 4]   79 	halt
+   0045 76            [ 4]   80 	halt
+   0046 CD 00 00      [17]   81 	call cpct_waitVSYNC_asm
+                             82 
+   0049 18 EA         [12]   83 	jr game_loop
+                             84 
+                             85 
+                             86 	

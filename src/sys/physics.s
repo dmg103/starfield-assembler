@@ -36,7 +36,7 @@ sys_physics_update_one_entity::
         dec hl
         dec hl
         dec hl
-        call man_entity_destroy
+        call man_entity_set4destruction
     no_zero:
 
 ret

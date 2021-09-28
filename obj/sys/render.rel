@@ -1,21 +1,53 @@
 XL2
-H 1 areas 8 global symbols
+H 1 areas E global symbols
 S .__.H$L. Def0000
 S man_entity_forall Ref0000
 S .__.ABS. Def0000
 S .__.CPU. Def0000
 S .__.$$$. Def2710
 S cpct_getScreenPtr_asm Ref0000
-A _CODE size 1A flags 0 addr 0
+A _CODE size 48 flags 0 addr 0
+S final_dec_hl Def003C
+S and_no_zero Def0040
+S final_inc_hl Def0033
 S sys_render_one_entity Def0000
-S sys_render_update Def0013
+S dec_hl Def0017
+S sys_render_update Def0041
+S preptr_0 Def0015
+S inc_hl Def0002
 T 00 00
 R 00 00 00 00
-T 00 00 11 00 C0 23 7E 4F 23 7E 47 2B 2B E5 CD
+T 00 00 3E 05
 R 00 00 00 00
-T 0D 00 00 00 36 88 E1 C9
-R 00 00 00 00 02 02 05 00
-T 13 00
+T 02 00
 R 00 00 00 00
-T 13 00 11 00 00 CD 00 00 C9
+T 02 00 23 3D 20 FC 4E 3E 00 91 28 09 7E 4F 23 7E
+R 00 00 00 00
+T 10 00 47 3E 00 02 2B
+R 00 00 00 00
+T 15 00
+R 00 00 00 00
+T 15 00 3E 05
+R 00 00 00 00
+T 17 00
+R 00 00 00 00
+T 17 00 2B 3D 20 FC 7E 0E 80 A1 20 1F E5 11 00 C0
+R 00 00 00 00
+T 25 00 23 4E 23 46 CD 00 00 36 88 44 4D E1 3E 05
+R 00 00 00 00 02 07 05 00
+T 33 00
+R 00 00 00 00
+T 33 00 23 3D 20 FC 71 23 70 3E 06
+R 00 00 00 00
+T 3C 00
+R 00 00 00 00
+T 3C 00 2B 3D 20 FC
+R 00 00 00 00
+T 40 00
+R 00 00 00 00
+T 40 00 C9
+R 00 00 00 00
+T 41 00
+R 00 00 00 00
+T 41 00 11 00 00 CD 00 00 C9
 R 00 00 00 00 00 03 00 00 02 06 01 00

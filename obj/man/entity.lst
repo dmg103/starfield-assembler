@@ -7,201 +7,221 @@ Hexadecimal [16-Bits]
                               2 .globl cpct_memset_asm
                               3 .globl cpct_memcpy_asm
                               4 
-   0000                       5 m_entities: .ds 50 ;;Reserved memory for the entity array
-   0032 0A                    6 max_entities: .db 10 ;;Num of maximum entities
+   0000                       5 m_entities: .ds 70 ;;Reserved memory for the entity array
+   0046 0A                    6 max_entities: .db 10 ;;Num of maximum entities
                               7 
-   0033 00                    8 m_zero_type_at_the_end: .db #0x00
-   0034                       9 m_next_free_entity: .ds 2 ;;Reserved memory for the pointer of the next free entity
-   0036 00                   10 m_num_entities: .db 0;;Current number of entities
+   0047 00                    8 m_zero_type_at_the_end: .db #0x00 ;;OJO!!
+   0048                       9 m_next_free_entity: .ds 2 ;;Reserved memory for the pointer of the next free entity
+   004A 00                   10 m_num_entities: .db 0;;Current number of entities
                              11 
-   0037 00 00                12 m_function_given_forall: .dw #0x0000 ;;Memory direction of the function that we want to execute
+   004B 00 00                12 m_function_given_forall: .dw #0x0000 ;;Memory direction of the function that we want to execute
                              13 
                              14 ;;Creates an entitiy coping zeros in their values
                              15 ;;Intialize the pointer of the next free entity.
                              16 ;;Changes de, a, bc, hl
-   0039                      17 man_entity_init::
+   004D                      17 man_entity_init::
                              18 
                              19     ;;Filling up with zeros
-   0039 11 00 00      [10]   20     ld de, #m_entities
-   003C 3E 00         [ 7]   21     ld a, #0x00
-   003E 01 32 00      [10]   22     ld bc, #50
+   004D 11 00 00      [10]   20     ld de, #m_entities
+   0050 3E 00         [ 7]   21     ld a, #0x00
+   0052 01 46 00      [10]   22     ld bc, #70
                              23 
-   0041 CD 00 00      [17]   24     call cpct_memset_asm
+   0055 CD 00 00      [17]   24     call cpct_memset_asm
                              25     
                              26     ;;Next free entity should point towards m_entities
-   0044 21 00 00      [10]   27     ld hl, #m_entities
-   0047 22 34 00      [16]   28     ld (m_next_free_entity), hl
-   004A C9            [10]   29 ret
+   0058 21 00 00      [10]   27     ld hl, #m_entities
+   005B 22 48 00      [16]   28     ld (m_next_free_entity), hl
+   005E C9            [10]   29 ret
                              30     
                              31 ;;Charges into de the next free entity memory direction
                              32 ;;Changes de, bc, hl, a
-   004B                      33 man_entity_create::
+   005F                      33 man_entity_create::
                              34     ;;Saving the next free memory direction of m_entities into de
-   004B ED 5B 34 00   [20]   35     ld de, (m_next_free_entity)
+   005F ED 5B 48 00   [20]   35     ld de, (m_next_free_entity)
                              36 
-   004F 01 05 00      [10]   37     ld bc, #0x0005
-   0052 2A 34 00      [16]   38     ld hl, (m_next_free_entity)
+   0063 01 07 00      [10]   37     ld bc, #0x0007
+   0066 2A 48 00      [16]   38     ld hl, (m_next_free_entity)
                              39 
-                             40     ;;++m_num_entities
-   0055 3A 36 00      [13]   41     ld a, (m_num_entities)
-   0058 3C            [ 4]   42     inc a
-   0059 32 36 00      [13]   43     ld (m_num_entities), a
-                             44 
-   005C 09            [11]   45     add hl, bc
-   005D 22 34 00      [16]   46     ld (m_next_free_entity), hl
+   0069 F5            [11]   40     push af
+                             41     ;;++m_num_entities
+   006A 3A 4A 00      [13]   42     ld a, (m_num_entities)
+   006D 3C            [ 4]   43     inc a
+   006E 32 4A 00      [13]   44     ld (m_num_entities), a
+                             45 
+   0071 F1            [10]   46     pop af
                              47 
-   0060 C9            [10]   48 ret
-                             49 
-                             50 ;;Prerequirements
-                             51 ;;      -DE should have the memory direction for the function given
-                             52 ;;Changes a, hl, de
-   0061                      53 man_entity_forall::
-   0061 21 00 00      [10]   54     ld hl, #m_entities
-                             55     ;;Keeping the function adress in a variable to use it.
+   0072 09            [11]   48     add hl, bc
+   0073 22 48 00      [16]   49     ld (m_next_free_entity), hl
+                             50 
+   0076 C9            [10]   51 ret
+                             52 
+                             53 ;;Prerequirements
+                             54 ;;      -DE should have the memory direction for the function given
+                             55 ;;Changes a, hl, de
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 2.
 Hexadecimal [16-Bits]
 
 
 
-   0064 ED 53 37 00   [20]   56     ld (m_function_given_forall), de
-                             57 
-   0068 ED 5B 32 00   [20]   58     ld de, (#max_entities) ;;OJO --> TODO: Cambiar por m_num_entities
-   006C 16 00         [ 7]   59     ld d, #0x00
-   006E                      60         repeat_man_entity_forall:
-                             61         ;;Compare against type to know if we should continue looping -->TODO: creo que si quito este bucle igual deberia funcionar igual
-   006E 7E            [ 7]   62         ld a, (hl)
-   006F C6 00         [ 7]   63         add a, #0x00 
-   0071 28 15         [12]   64         jr z, entity_no_valid
-                             65 
-                             66         ;;Call the funcion given registered in m_function_given_forall
-   0073 DD 21 7F 00   [14]   67 		ld ix, #position_after_function_given
-   0077 DD E5         [15]   68 		push ix
-                             69 
-   0079 DD 2A 37 00   [20]   70 		ld ix, (#m_function_given_forall)
-   007D DD E9         [ 8]   71 		jp (ix)
-   007F                      72 		position_after_function_given:
-                             73         ;;Add 5 to hl to move to the reach the next entity available
-   007F 3E 05         [ 7]   74         ld a, #0x05
-   0081                      75             repeat_inc_hl_forall:
-   0081 23            [ 6]   76             inc hl
-   0082 3D            [ 4]   77             dec a
-   0083 20 FC         [12]   78         jr nz, repeat_inc_hl_forall
-                             79 
-                             80         ;;Decrement a to loop among the entities
-   0085 1D            [ 4]   81         dec e
-   0086 20 E6         [12]   82     jr nz, repeat_man_entity_forall
-   0088                      83     entity_no_valid:
-   0088 C9            [10]   84 ret
-                             85 
-                             86 ;;Prerequirements
-                             87 ;;  -
-                             88 ;;Updates entity manager by destroying all marked entities as dead
-   0089                      89 man_entity_update::
-   0089 21 00 00      [10]   90     ld hl, #m_entities
-                             91 
-                             92     ;;Looping through all the actives entities
-   008C ED 5B 36 00   [20]   93     ld de, (#m_num_entities)
-   0090 16 00         [ 7]   94     ld d, #0x00
-   0092                      95     repeat_man_entity_update:
-                             96         ;;Check if the entity is marked as dead
-   0092 7E            [ 7]   97         ld a, (hl)
-   0093 06 80         [ 7]   98         ld b, #0x80
-   0095 A0            [ 4]   99         and b
-   0096 20 08         [12]  100         jr nz, destroy_dead_entity
-                            101 
-   0098 3E 05         [ 7]  102         ld a, #0x05
-   009A                     103             repeat_inc_hl_update:
-   009A 23            [ 6]  104             inc hl
-   009B 3D            [ 4]  105             dec a
-   009C 20 FC         [12]  106         jr nz, repeat_inc_hl_update
-                            107         
-   009E 18 03         [12]  108         jr continue
-                            109 
-   00A0                     110         destroy_dead_entity:
+   0077                      56 man_entity_forall::
+   0077 21 00 00      [10]   57     ld hl, #m_entities
+                             58     ;;Keeping the function adress in a variable to use it.
+   007A ED 53 4B 00   [20]   59     ld (m_function_given_forall), de
+                             60 
+   007E ED 5B 46 00   [20]   61     ld de, (#max_entities) ;;OJO --> TODO: Cambiar por m_num_entities
+   0082 16 00         [ 7]   62     ld d, #0x00
+   0084                      63         repeat_man_entity_forall:
+                             64         ;;Compare against type to know if we should continue looping -->TODO: creo que si quito este bucle igual deberia funcionar igual
+   0084 7E            [ 7]   65         ld a, (hl)
+   0085 C6 00         [ 7]   66         add a, #0x00 
+   0087 28 15         [12]   67         jr z, entity_no_valid
+                             68 
+                             69         ;;Call the funcion given registered in m_function_given_forall
+                             70 
+   0089 DD 21 95 00   [14]   71 		ld ix, #position_after_function_given
+   008D DD E5         [15]   72 		push ix
+                             73 
+   008F DD 2A 4B 00   [20]   74 		ld ix, (#m_function_given_forall)
+   0093 DD E9         [ 8]   75 		jp (ix)
+                             76         
+   0095                      77 		position_after_function_given:
+                             78         ;;Add 5 to hl to move to the reach the next entity available
+   0095 3E 07         [ 7]   79         ld a, #0x07
+   0097                      80             repeat_inc_hl_forall:
+   0097 23            [ 6]   81             inc hl
+   0098 3D            [ 4]   82             dec a
+   0099 20 FC         [12]   83         jr nz, repeat_inc_hl_forall
+                             84 
+                             85         ;;Decrement a to loop among the entities
+   009B 1D            [ 4]   86         dec e
+   009C 20 E6         [12]   87     jr nz, repeat_man_entity_forall
+   009E                      88     entity_no_valid:
+   009E C9            [10]   89 ret
+                             90 
+                             91 ;;Prerequirements
+                             92 ;;  -
+                             93 ;;Updates entity manager by destroying all marked entities as dead
+   009F                      94 man_entity_update::
+   009F 21 00 00      [10]   95     ld hl, #m_entities
+                             96 
+                             97     ;;Looping through all the actives entities
+   00A2 ED 5B 4A 00   [20]   98     ld de, (#m_num_entities)
+   00A6 16 00         [ 7]   99     ld d, #0x00
+   00A8                     100     repeat_man_entity_update:
+                            101         ;;Check if the entity is marked as dead
+   00A8 7E            [ 7]  102         ld a, (hl)
+   00A9 06 80         [ 7]  103         ld b, #0x80
+   00AB A0            [ 4]  104         and b
+   00AC 20 08         [12]  105         jr nz, destroy_dead_entity
+                            106 
+   00AE 3E 07         [ 7]  107         ld a, #0x07
+   00B0                     108             repeat_inc_hl_update:
+   00B0 23            [ 6]  109             inc hl
+   00B1 3D            [ 4]  110             dec a
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 3.
 Hexadecimal [16-Bits]
 
 
 
-   00A0 CD AD 00      [17]  111             call man_entity_destroy
-                            112 
-   00A3                     113         continue:
+   00B2 20 FC         [12]  111         jr nz, repeat_inc_hl_update
+                            112         
+   00B4 18 03         [12]  113         jr continue
                             114 
-   00A3 1D            [ 4]  115         dec e
-   00A4 20 EC         [12]  116     jr nz, repeat_man_entity_update
+   00B6                     115         destroy_dead_entity:
+   00B6 CD C3 00      [17]  116             call man_entity_destroy
                             117 
-   00A6 C9            [10]  118 ret
+   00B9                     118         continue:
                             119 
-                            120 ;;Prerequirements
-                            121 ;;      -HL should have the memory direction for the entity 
-                            122 ;;Changes hl
-   00A7                     123 man_entity_set4destruction::
-   00A7 7E            [ 7]  124     ld a, (hl)
-   00A8 06 80         [ 7]  125     ld b, #0x80
-                            126 
-   00AA B0            [ 4]  127     or b
-                            128 
-                            129     ;;TOOD: ojo!! checkear aqui si hay que pasar a o b
-   00AB 77            [ 7]  130     ld (hl), a
-   00AC C9            [10]  131 ret
-                            132 
-                            133 ;;Prerequirements
-                            134 ;;      -HL should have the memory direction for the entity to be destroyed
-                            135 ;;Changes hl
-   00AD                     136 man_entity_destroy:
-   00AD 01 34 00      [10]  137     ld bc, #m_next_free_entity
-   00B0 3E 05         [ 7]  138     ld a, #0x05
-   00B2                     139         repeat_dec:
-   00B2 0B            [ 6]  140         dec bc
-   00B3 3D            [ 4]  141         dec a
-   00B4 20 FC         [12]  142     jr nz, repeat_dec
-                            143 
-                            144     ;;Hl contais the direction of the to be destroyed entity
-                            145     ;;Bc contains the last available position -1 (-5 bytes)
-                            146 
-                            147     ;;Compare if bc and hl are the same
-   00B6 79            [ 4]  148     ld a, c
-                            149 
-                            150     ;;If this is !=0, the pointers are not pointing to the same direction
-   00B7 95            [ 4]  151     sub l
-   00B8 20 00         [12]  152     jr nz, copy_memory
-                            153 
-                            154     
-   00BA                     155     copy_memory:
-                            156         ;;Saving hl in the stack
-   00BA E5            [11]  157         push hl
+   00B9 1D            [ 4]  120         dec e
+   00BA 20 EC         [12]  121     jr nz, repeat_man_entity_update
+                            122 
+   00BC C9            [10]  123 ret
+                            124 
+                            125 ;;Prerequirements
+                            126 ;;      -HL should have the memory direction for the entity 
+                            127 ;;Changes hl
+   00BD                     128 man_entity_set4destruction::
+   00BD 7E            [ 7]  129     ld a, (hl)
+   00BE 06 80         [ 7]  130     ld b, #0x80
+                            131 
+   00C0 B0            [ 4]  132     or b
+                            133 
+                            134     ;;TOOD: ojo!! checkear aqui si hay que pasar a o b
+   00C1 77            [ 7]  135     ld (hl), a
+   00C2 C9            [10]  136 ret
+                            137 
+                            138 ;;Prerequirements
+                            139 ;;      -HL should have the memory direction for the entity to be destroyed
+                            140 ;;Changes hl
+   00C3                     141 man_entity_destroy:
+   00C3 01 48 00      [10]  142     ld bc, #m_next_free_entity
+   00C6 3E 07         [ 7]  143     ld a, #0x07
+   00C8                     144         repeat_dec:
+   00C8 0B            [ 6]  145         dec bc
+   00C9 3D            [ 4]  146         dec a
+   00CA 20 FC         [12]  147     jr nz, repeat_dec
+                            148 
+                            149     ;;Hl contais the direction of the to be destroyed entity
+                            150     ;;Bc contains the last available position -1 (-5 bytes)
+                            151 
+                            152     ;;Compare if bc and hl are the same
+   00CC 79            [ 4]  153     ld a, c
+                            154 
+                            155     ;;If this is = 0, the pointers are pointing to the same direction
+   00CD 95            [ 4]  156     sub l
+   00CE 28 0E         [12]  157     jr z, no_copy_memory
                             158 
-   00BB 54            [ 4]  159         ld d, h
-   00BC 5D            [ 4]  160         ld e, l
-   00BD 60            [ 4]  161         ld h, b
-   00BE 69            [ 4]  162         ld l, c
-   00BF 01 05 00      [10]  163         ld bc, #0x05
-                            164 
-   00C2 CD 00 00      [17]  165         call cpct_memcpy_asm
+                            159     ;;Coping memory in the free entity array space cause we destroy one entity
+                            160     ;;Saving hl in the stack
+   00D0 E5            [11]  161     push hl
+                            162 
+   00D1 54            [ 4]  163     ld d, h
+   00D2 5D            [ 4]  164     ld e, l
+   00D3 60            [ 4]  165     ld h, b
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Zilog Z80 / Hitachi HD64180), page 4.
 Hexadecimal [16-Bits]
 
 
 
-                            166 
-   00C5 E1            [10]  167         pop hl
-                            168 
-                            169     
-   00C6 C9            [10]  170 ret
+   00D4 69            [ 4]  166     ld l, c
+                            167 
+                            168     ;;Saving bc in the stack
+   00D5 C5            [11]  169     push bc
+   00D6 01 07 00      [10]  170     ld bc, #0x07
                             171 
-                            172 
-                            173 ;;Prerequirements
-                            174 ;;  -
-                            175 ;;Returns the number of free entities while available in the c register
-                            176 ;;Changes bc, a
-   00C7                     177 man_entity_free_space::
-   00C7 3A 36 00      [13]  178     ld a, (#m_num_entities)
-   00CA ED 4B 32 00   [20]  179     ld bc, (#max_entities)
-   00CE 06 00         [ 7]  180     ld b, #0x00
-                            181 
-   00D0 91            [ 4]  182     sub c
-   00D1 C9            [10]  183 ret
+   00D9 CD 00 00      [17]  172     call cpct_memcpy_asm
+                            173 
+   00DC E1            [10]  174     pop hl
+   00DD C1            [10]  175     pop bc
+                            176 
+   00DE                     177     no_copy_memory:
+   00DE 3E 00         [ 7]  178         ld a, #0x00
+   00E0 02            [ 7]  179         ld (bc), a
+                            180 
+                            181         ;;m_next_free_entity should point one position back so
+                            182         ;;ld de, #m_next_free_entity
+   00E1 ED 43 48 00   [20]  183         ld (m_next_free_entity), bc
                             184 
-                            185 
-                            186 
-                            187 
+                            185         ;;--m_num_entities
+   00E5 3A 4A 00      [13]  186         ld a, (m_num_entities)
+   00E8 3D            [ 4]  187         dec a
+   00E9 32 4A 00      [13]  188         ld (m_num_entities), a
+                            189     
+   00EC C9            [10]  190 ret
+                            191 
+                            192 
+                            193 ;;Prerequirements
+                            194 ;;  -
+                            195 ;;Returns the number of free entities while available in the c register
+                            196 ;;Changes bc, a
+   00ED                     197 man_entity_free_space::
+   00ED 3A 4A 00      [13]  198     ld a, (#m_num_entities)
+   00F0 ED 4B 46 00   [20]  199     ld bc, (#max_entities)
+   00F4 06 00         [ 7]  200     ld b, #0x00
+                            201 
+   00F6 91            [ 4]  202     sub c
+   00F7 C9            [10]  203 ret
+                            204 
+                            205 
+                            206 
+                            207 

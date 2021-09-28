@@ -99,12 +99,12 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000107  Key_4                              cpct_keyboard
      00000108  Key_1                              cpct_keyboard
      00000109  Joy0_Up                            cpct_keyboard
-     00000198  l__CODE                         
      00000200  Key_CursorRight                    cpct_keyboard
      00000201  Key_Copy                           cpct_keyboard
      00000202  Key_OpenBracket                    cpct_keyboard
      00000203  Key_Hyphen                         cpct_keyboard
      00000204  Key_9                              cpct_keyboard
+     00000204  l__CODE                         
      00000205  Key_7                              cpct_keyboard
      00000206  Joy1_Down                          cpct_keyboard
      00000206  Key_5                              cpct_keyboard
@@ -186,7 +186,7 @@ Area                                    Addr        Size        Decimal Bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00004198  s__DATA                         
+     00004204  s__DATA                         
      00007F00  GA_port                            cpct_keyboard
      00008000  Key_FDot                           cpct_keyboard
      00008001  Key_F0                             cpct_keyboard
@@ -204,56 +204,74 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_CODE                               00004000    00000198 =         408. bytes (REL,CON)
+_CODE                               00004000    00000204 =         516. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      00004000  init_e                             cpct_keyboard
-     00004005  create_entity                      cpct_keyboard
-     00004012  _main                              cpct_keyboard
-     0000402D  repeat                             cpct_keyboard
-     00004033  game_loop                          cpct_keyboard
-     0000403B  sys_physics_update_one_entity      
-     0000404C  destroy_entity                     
-     00004052  no_zero                            
-     00004053  sys_physics_update                 
-     0000405A  sys_render_one_entity              
-     0000406D  sys_render_update                  
-     00004074  m_entities                         
-     000040A6  max_entities                       
-     000040A7  m_zero_type_at_the_end             
-     000040A8  m_next_free_entity                 
-     000040AA  m_num_entities                     
-     000040AB  m_function_given_forall            
-     000040AD  man_entity_init                    
-     000040BF  man_entity_create                  
-     000040D5  man_entity_forall                  
-     000040E2  repeat_man_entity_forall           
-     000040F3  position_after_function_given      
-     000040F5  repeat_inc_hl_forall               
-     000040FC  entity_no_valid                    
-     000040FD  man_entity_update                  
-     00004106  repeat_man_entity_update           
-     0000410E  repeat_inc_hl_update               
-     00004114  destroy_dead_entity                
-     00004117  continue                           
-     0000411B  man_entity_set4destruction         
-     00004121  man_entity_destroy                 
-     00004126  repeat_dec                         
-     0000412E  copy_memory                        
-     0000413B  man_entity_free_space              
-     00004146  _cpct_setPALColour                 cpct_video
-     00004152  _cpct_setVideoMode                 cpct_video
-     00004160  _cpct_memcpy                       cpct_memutils
-     00004168  cpct_memset_asm                    cpct_memutils
-     00004170  cpct_memcpy_asm                    cpct_memutils
-     00004173  _cpct_disableFirmware              cpct_firmware
-     00004173  _cpct_removeInterruptHandler       cpct_firmware
-     00004173  cpct_disableFirmware_asm           cpct_firmware
-     00004173  cpct_removeInterruptHandler_asm    cpct_firmware
-     00004183  _cpct_mode_rom_status              cpct_firmware
-     00004184  cpct_getScreenPtr_asm              cpct_video
+     00004007  create_entity                      cpct_keyboard
+     00004014  _main                              cpct_keyboard
+     0000402F  repeat                             cpct_keyboard
+     00004035  game_loop                          cpct_keyboard
+     0000404B  sys_physics_update_one_entity      
+     0000405C  destroy_entity                     
+     00004062  no_zero                            
+     00004063  sys_physics_update                 
+     0000406A  sys_render_one_entity              
+     0000406C  inc_hl                             
+     0000407F  preptr_0                           
+     00004081  dec_hl                             
+     0000409D  final_inc_hl                       
+     000040A6  final_dec_hl                       
+     000040AA  and_no_zero                        
+     000040AB  sys_render_update                  
+     000040B2  m_entities                         
+     000040F8  max_entities                       
+     000040F9  m_zero_type_at_the_end             
+     000040FA  m_next_free_entity                 
+     000040FC  m_num_entities                     
+     000040FD  m_function_given_forall            
+     000040FF  man_entity_init                    
+     00004111  man_entity_create                  
+     00004129  man_entity_forall                  
+     00004136  repeat_man_entity_forall           
+     00004147  position_after_function_given      
+     00004149  repeat_inc_hl_forall               
+     00004150  entity_no_valid                    
+     00004151  man_entity_update                  
+     0000415A  repeat_man_entity_update           
+     00004162  repeat_inc_hl_update               
+     00004168  destroy_dead_entity                
+     0000416B  continue                           
+     0000416F  man_entity_set4destruction         
+     00004175  man_entity_destroy                 
+     0000417A  repeat_dec                         
+     00004190  no_copy_memory                     
+     0000419F  man_entity_free_space              
+     000041AA  _cpct_setPALColour                 cpct_video
+     000041B6  _cpct_setVideoMode                 cpct_video
+     000041C4  _cpct_waitVSYNC                    cpct_video
+     000041C4  cpct_waitVSYNC_asm                 cpct_video
+     000041CC  _cpct_memcpy                       cpct_memutils
+     000041D4  cpct_memset_asm                    cpct_memutils
+     000041DC  cpct_memcpy_asm                    cpct_memutils
+     000041DF  _cpct_disableFirmware              cpct_firmware
+     000041DF  _cpct_removeInterruptHandler       cpct_firmware
+     000041DF  cpct_disableFirmware_asm           cpct_firmware
 ASxxxx Linker V03.00 + NoICE + sdld,  page 6.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00004000    00000204 =         516. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     000041DF  cpct_removeInterruptHandler_asm    cpct_firmware
+     000041EF  _cpct_mode_rom_status              cpct_firmware
+     000041F0  cpct_getScreenPtr_asm              cpct_video
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 7.
 
 Files Linked                              [ module(s) ]
 
@@ -270,6 +288,8 @@ Libraries Linked                          [ object file ]
 /home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_setVideoMode_cbindings.rel ]
 /home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
+                                          [ cpct_waitVSYNC.rel ]
+/home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_memcpy_cbindings.rel ]
 /home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_memset_asmbinding.rel ]
@@ -282,7 +302,7 @@ Libraries Linked                          [ object file ]
 /home/farravid/Documents/cpctelera/cpctelera/cpctelera.lib
                                           [ cpct_getScreenPtr_asmbindings.re ]
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 7.
+ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
 
 User Base Address Definitions
 

@@ -2,10 +2,10 @@
 .globl cpct_memset_asm
 .globl cpct_memcpy_asm
 
-m_entities: .ds 50 ;;Reserved memory for the entity array
+m_entities: .ds 70 ;;Reserved memory for the entity array
 max_entities: .db 10 ;;Num of maximum entities
 
-m_zero_type_at_the_end: .db #0x00
+m_zero_type_at_the_end: .db #0x00 ;;OJO!!
 m_next_free_entity: .ds 2 ;;Reserved memory for the pointer of the next free entity
 m_num_entities: .db 0;;Current number of entities
 
@@ -19,7 +19,7 @@ man_entity_init::
     ;;Filling up with zeros
     ld de, #m_entities
     ld a, #0x00
-    ld bc, #50
+    ld bc, #70
 
     call cpct_memset_asm
     
@@ -34,13 +34,16 @@ man_entity_create::
     ;;Saving the next free memory direction of m_entities into de
     ld de, (m_next_free_entity)
 
-    ld bc, #0x0005
+    ld bc, #0x0007
     ld hl, (m_next_free_entity)
 
+    push af
     ;;++m_num_entities
     ld a, (m_num_entities)
     inc a
     ld (m_num_entities), a
+
+    pop af
 
     add hl, bc
     ld (m_next_free_entity), hl
@@ -64,14 +67,16 @@ man_entity_forall::
         jr z, entity_no_valid
 
         ;;Call the funcion given registered in m_function_given_forall
+
 		ld ix, #position_after_function_given
 		push ix
 
 		ld ix, (#m_function_given_forall)
 		jp (ix)
+        
 		position_after_function_given:
         ;;Add 5 to hl to move to the reach the next entity available
-        ld a, #0x05
+        ld a, #0x07
             repeat_inc_hl_forall:
             inc hl
             dec a
@@ -99,7 +104,7 @@ man_entity_update::
         and b
         jr nz, destroy_dead_entity
 
-        ld a, #0x05
+        ld a, #0x07
             repeat_inc_hl_update:
             inc hl
             dec a
@@ -135,7 +140,7 @@ ret
 ;;Changes hl
 man_entity_destroy:
     ld bc, #m_next_free_entity
-    ld a, #0x05
+    ld a, #0x07
         repeat_dec:
         dec bc
         dec a
@@ -147,25 +152,40 @@ man_entity_destroy:
     ;;Compare if bc and hl are the same
     ld a, c
 
-    ;;If this is !=0, the pointers are not pointing to the same direction
+    ;;If this is = 0, the pointers are pointing to the same direction
     sub l
-    jr nz, copy_memory
+    jr z, no_copy_memory
 
-    
-    copy_memory:
-        ;;Saving hl in the stack
-        push hl
+    ;;Coping memory in the free entity array space cause we destroy one entity
+    ;;Saving hl in the stack
+    push hl
 
-        ld d, h
-        ld e, l
-        ld h, b
-        ld l, c
-        ld bc, #0x05
+    ld d, h
+    ld e, l
+    ld h, b
+    ld l, c
 
-        call cpct_memcpy_asm
+    ;;Saving bc in the stack
+    push bc
+    ld bc, #0x07
 
-        pop hl
+    call cpct_memcpy_asm
 
+    pop hl
+    pop bc
+
+    no_copy_memory:
+        ld a, #0x00
+        ld (bc), a
+
+        ;;m_next_free_entity should point one position back so
+        ;;ld de, #m_next_free_entity
+        ld (m_next_free_entity), bc
+
+        ;;--m_num_entities
+        ld a, (m_num_entities)
+        dec a
+        ld (m_num_entities), a
     
 ret
 
