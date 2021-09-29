@@ -19,7 +19,7 @@
 ;;Systems
 .globl sys_physics_update
 .globl sys_render_update
-.globl sys_generator_update
+;.globl sys_generator_update
 
 init_e:
 	.db #0x01	; 1 ;type
@@ -68,7 +68,7 @@ _main::
 
 game_loop:
 	call sys_physics_update
-	call sys_generator_update
+	;call sys_generator_update
 	call sys_render_update
 
 	call man_entity_update
