@@ -98,9 +98,15 @@ man_entity_update::
     ld hl, #m_entities
 
     ;;Looping through all the actives entities
-    ld de, (#m_num_entities)
+    ld de, (#max_entities)
     ld d, #0x00
     repeat_man_entity_update:
+
+        ;;Compare against type to know if we should continue looping -->TODO: creo que si quito este bucle igual deberia funcionar igual
+        ld a, (hl)
+        add a, #0x00 
+        jr z, update_entity_no_valid
+
         ;;Check if the entity is marked as dead
         ld a, (hl)
         ld b, #0x80
@@ -116,13 +122,14 @@ man_entity_update::
         jr continue
 
         destroy_dead_entity:
+            push de
             call man_entity_destroy
+            pop de
 
         continue:
-
         dec e
     jr nz, repeat_man_entity_update
-
+    update_entity_no_valid:
 ret
 
 ;;Prerequirements
@@ -142,7 +149,7 @@ ret
 ;;      -HL should have the memory direction for the entity to be destroyed
 ;;Changes hl
 man_entity_destroy:
-    ld bc, #m_next_free_entity
+    ld bc, (#m_next_free_entity)
     ld a, #0x07
         repeat_dec:
         dec bc
@@ -179,11 +186,11 @@ man_entity_destroy:
 
     no_copy_memory:
         ld a, #0x00
-        ld (bc), a
+        ld (hl), a
 
         ;;m_next_free_entity should point one position back so
         ;;ld de, #m_next_free_entity
-        ld (m_next_free_entity), bc
+        ld (m_next_free_entity), hl
 
         ;;--m_num_entities
         ld a, (m_num_entities)

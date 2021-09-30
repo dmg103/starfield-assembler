@@ -26,6 +26,8 @@ _main::
 	;;Initialize cpctelera render setting
 	call    _cpct_disableFirmware
 
+	call man_entity_init
+	
 	ld l, #0x00
    	call	_cpct_setVideoMode
 
@@ -38,7 +40,6 @@ _main::
 	push    hl ;;ojo
 	call	_cpct_setPALColour
 
-	call man_entity_init
 	;;TODO -> sys_render_init
 
 game_loop:
