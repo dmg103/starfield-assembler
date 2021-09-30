@@ -3,9 +3,8 @@
 .globl cpct_memcpy_asm
 
 m_entities: .ds 70 ;;Reserved memory for the entity array
-max_entities: .db 10 ;;Num of maximum entities
-
 m_zero_type_at_the_end: .db #0x00 ;;OJO!!
+max_entities: .db 10 ;;Num of maximum entities
 m_next_free_entity: .ds 2 ;;Reserved memory for the pointer of the next free entity
 m_num_entities: .db 0;;Current number of entities
 
@@ -40,6 +39,7 @@ man_entity_create::
     ld hl, (m_next_free_entity)
 
     push af
+
     ;;++m_num_entities
     ld a, (m_num_entities)
     inc a
@@ -49,6 +49,7 @@ man_entity_create::
 
     add hl, bc
     ld (m_next_free_entity), hl
+    ;;OJO, no se si DE devuelve bien la entidad
 
 ret
 
@@ -197,8 +198,8 @@ ret
 ;;Returns the number of free entities while available in the c register
 ;;Changes bc, a
 man_entity_free_space::
-    ld a, (#m_num_entities)
-    ld bc, (#max_entities)
+    ld a, (#max_entities)
+    ld bc, (#m_num_entities)
     ld b, #0x00
 
     sub c

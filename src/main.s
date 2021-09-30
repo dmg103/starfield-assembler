@@ -19,26 +19,8 @@
 ;;Systems
 .globl sys_physics_update
 .globl sys_render_update
-;.globl sys_generator_update
+.globl sys_generator_update
 
-init_e:
-	.db #0x01	; 1 ;type
-	.db #0x4f	; 79	'O' ;pos_x
-	.db #0x01	; 1	;pos_y
-	.db #0xff	; -1 ;vel_x
-	.db #0xff	; 255 ;color
-	.dw #0x0000	;previous ptr
-
-create_entity:
-
-	call man_entity_create
-
-	;;After call man_entity_create, de has the next free entity memory direction 
-	ld hl, #init_e
-	ld bc, #0x0007
-
-	call cpct_memcpy_asm
-ret
 
 _main::
 	;;Initialize cpctelera render setting
@@ -57,18 +39,11 @@ _main::
 	call	_cpct_setPALColour
 
 	call man_entity_init
-
-	;;Creates a register value entities
-	;;OJO! esta funcion esta cambiando a por eso el buclee parece qu peta
-	ld a, #0x01
-		repeat:
-		call create_entity
-		dec a
-	jr nz, repeat
+	;;TODO -> sys_render_init
 
 game_loop:
 	call sys_physics_update
-	;call sys_generator_update
+	call sys_generator_update
 	call sys_render_update
 
 	call man_entity_update
