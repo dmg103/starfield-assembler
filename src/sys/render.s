@@ -1,19 +1,60 @@
+.globl _cpct_setPALColour
+.globl _cpct_setVideoMode
 .globl man_entity_forall
 .globl cpct_getScreenPtr_asm
 .globl entity_dead
 
-;;Prerequirements:
-;;  Hl should have a pointer to the memory direction of the entity
-;;Changes a, b, c 
+;;Maths utilities
+.globl inc_hl_number
+.globl dec_hl_number
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  -
+;; Objetive: Initialize cpctelera render and screen settings
+;; Modifies: Probably all the registers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+sys_render_init::
+	ld l, #0x00
+   	call	_cpct_setVideoMode
+
+	;;set border
+	ld hl, #0x1410
+	push    hl 
+	call	_cpct_setPALColour
+
+	ld hl, #0x1400
+	push    hl 
+	call	_cpct_setPALColour
+ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  -
+;; Objetive: Update the render for all the entities
+;; Modifies: de
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+sys_render_update::
+    ld de, #sys_render_one_entity
+    call man_entity_forall
+ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  - HL: should contain the memory direction of the entity we want to update the render
+;; Objetive: Update the render for one entity
+;; Modifies: de
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 sys_render_one_entity:
     
-    ld de, #0x06
-    add hl, de
+    ld a, #0x06
+    call inc_hl_number
 
     ;;Now hl, is pointing to the prevptr (last positioin) = 00 C8 <---------
     ld a, #0x00
     ld d, (hl)
-
+    
+    ;;Check if prevptr was 0, if it wasn't we should not delete it
     sub d
 
     jr nz, to_erase
@@ -28,20 +69,19 @@ sys_render_one_entity:
         ;;Now, de is the prevptr DE = C8 00, erase the last draw
         ld a, #0x00
         ld (bc), a 
-        ;;Positioning hl at the beginning of the entity
+
         inc hl
 
     to_draw:
 
-        dec hl
-        dec hl
-        dec hl
-        dec hl
-        dec hl
-        dec hl
+        ;;Positioning hl at the beginning of the entity
+        ld a, #0x06
+        call dec_hl_number
 
         ;;Now, we should check if the start is dead, hl is pointing to the beginning of the entity
-        ld a, (hl) ;;Type of the star
+
+        ;;Type of the star
+        ld a, (hl)           
         ld b, #entity_dead 
 
         and b
@@ -71,8 +111,8 @@ sys_render_one_entity:
     pop hl
 
     ;;Now we have, BC with new prevptr, and HL is pointing to the beginnning of the entity (type)
-    ld de, #0x05
-    add hl, de
+    ld a, #0x05
+    call inc_hl_number
 
     ld (hl), c
     
@@ -80,18 +120,8 @@ sys_render_one_entity:
     
     ld (hl), b
 
-    dec hl
-    dec hl
-    dec hl
-    dec hl
-    dec hl
-    dec hl
+    ld a, #0x06
+    call dec_hl_number
 
     star_dead_no_render:
-
-ret
-
-sys_render_update::
-    ld de, #sys_render_one_entity
-    call man_entity_forall
 ret
