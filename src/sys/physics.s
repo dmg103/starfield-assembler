@@ -1,18 +1,33 @@
 .globl man_entity_forall
-.globl man_entity_destroy
 .globl man_entity_set4destruction
 
+;;Maths utilities
+.globl inc_hl_number
+.globl dec_hl_number
 
-;;size_entity_t = 7 !Ojo para compilar que funciona
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  -
+;; Objetive: Update the physics for all the entities
+;; Modifies: de
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+sys_physics_update::
+    ld de, #sys_physics_update_one_entity
+    call man_entity_forall
 
-;;Prerequirements:
-;;  Hl should have a pointer to the memory direction of the entity
-;;Changes a, bc 
+ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  - HL: should contain the memory direction of the entity we want to update the render
+;; Objetive: Update the render for one entity
+;; Modifies: a, bc, (hl no se si lo modifica)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 sys_physics_update_one_entity::
-
     ;;B is the current entity pos_x
     inc hl
     ld b, (hl)
+
     ;;C is the current entity vel_x
     inc hl
     inc hl
@@ -26,8 +41,8 @@ sys_physics_update_one_entity::
     push af
 
     sub b
-    ;;If the sumn causes zero in a, the entity should be destroyed
-    jr nc, destroy_entity ;;OJO, funciona? TODO
+    ;;If the sum causes zero in a, the entity should be destroyed
+    jr nc, destroy_entity
 
     ;;Coming back to the pos_x memory direction fo the entity to modify it
     dec hl
@@ -43,16 +58,11 @@ sys_physics_update_one_entity::
     
     destroy_entity:
         pop af
-        dec hl
-        dec hl
-        dec hl
+
+        ld a, #0x03
+        call dec_hl_number
+
         call man_entity_set4destruction
     no_zero:
-
-ret
-
-sys_physics_update::
-    ld de, #sys_physics_update_one_entity
-    call man_entity_forall
 
 ret

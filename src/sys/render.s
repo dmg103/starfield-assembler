@@ -2,7 +2,9 @@
 .globl _cpct_setVideoMode
 .globl man_entity_forall
 .globl cpct_getScreenPtr_asm
-.globl entity_dead
+
+;;States of an entity
+.globl entity_type_dead
 
 ;;Maths utilities
 .globl inc_hl_number
@@ -43,7 +45,7 @@ ret
 ;; Pre requirements
 ;;  - HL: should contain the memory direction of the entity we want to update the render
 ;; Objetive: Update the render for one entity
-;; Modifies: de
+;; Modifies: a, bc, de, (hl no se si lo modifica)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 sys_render_one_entity:
     
@@ -82,7 +84,7 @@ sys_render_one_entity:
 
         ;;Type of the star
         ld a, (hl)           
-        ld b, #entity_dead 
+        ld b, #entity_type_dead 
 
         and b
         

@@ -2,24 +2,45 @@
 .globl cpct_memset_asm
 .globl cpct_memcpy_asm
 
-m_entities: .ds 70 ;;Reserved memory for the entity array
-m_zero_type_at_the_end: .db #0x00 ;;OJO!!
-max_entities: .db 10 ;;Num of maximum entities
-m_next_free_entity: .ds 2 ;;Reserved memory for the pointer of the next free entity
-m_num_entities: .db 0;;Current number of entities
+;;Maths utilities
+.globl inc_hl_number
+.globl dec_bc_number
 
-m_function_given_forall: .dw #0x0000 ;;Memory direction of the function that we want to execute
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; """""Variables""""
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+m_entities: .ds 280                     ;;Reserved memory for the entities array
+m_zero_type_at_the_end: .db #0x00       ;;Trick for stop the loop of entities, positioned
+max_entities: .db 40                    ;;Num of maximum entities
+m_next_free_entity: .ds 2               ;;Reserved memory for the pointer of the next free entity
+m_num_entities: .db 0                   ;;Current number of entities
+m_function_given_forall: .dw #0x0000    ;;Memory direction of the function that we want to execute
 
-entity_dead = 0x80
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Global variables
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+entity_size             = 7
+entity_type_invalid     = 0x00
+entity_type_star        = 0x01          ;;Lower bit signals star entity
+entity_type_dead        = 0x80          ;;Upper bit signals dead entity
+entity_type_default     = 0x7F         ;;Default entity (all bits = 1 but the one to signal dead)
 
-;;Creates an entitiy coping zeros in their values
-;;Intialize the pointer of the next free entity.
-;;Changes de, a, bc, hl
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  -
+;; Objetive: Initialize the entities establishing their values to 0
+;; Also m_next_free_entity points to the first free entity to write
+;;
+;; Modifies: de
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 man_entity_init::
 
     ;;Filling up with zeros
     ld de, #m_entities
     ld a, #0x00
+    ;;TODO: Se supone que aqui deberia poner (#m_entities) pero si lo pongo no funciona
+    ;; no me voy a pelear ahora la verdad osea que cojones vaya curro
     ld bc, #70
 
     call cpct_memset_asm
@@ -28,19 +49,28 @@ man_entity_init::
     ld hl, #m_entities
     ld (m_next_free_entity), hl
 ret
-    
-;;Charges into de the next free entity memory direction
-;;Changes de, bc, hl, a
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  -
+;; Objetive: Create a new entity, increase the number of entities
+;; and update the next_free_entity
+;;
+;; Modifies: a, de, bc, hl
+;;
+;; Returns: In de, returns the direction of the entity created
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;   
 man_entity_create::
     ;;Saving the next free memory direction of m_entities into de
     ld de, (m_next_free_entity)
 
-    ld bc, #0x0007
+    ld bc, #entity_size
     ld hl, (m_next_free_entity)
 
     push af
 
-    ;;++m_num_entities
+    ;;Increase the num of entities 
     ld a, (m_num_entities)
     inc a
     ld (m_num_entities), a
@@ -49,22 +79,26 @@ man_entity_create::
 
     add hl, bc
     ld (m_next_free_entity), hl
-    ;;OJO, no se si DE devuelve bien la entidad
-
 ret
 
-;;Prerequirements
-;;      -DE should have the memory direction for the function given
-;;Changes a, hl, de
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  - de: should contain the memory direction for the given function to be called
+;;
+;; Objetive: For all the entities, execute the function given by the systems
+;;
+;; Modifies: (Probably almost all the entities)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;   
 man_entity_forall::
     ld hl, #m_entities
     ;;Keeping the function adress in a variable to use it.
     ld (m_function_given_forall), de
 
-    ld de, (#max_entities) ;;OJO --> TODO: Cambiar por m_num_entities
+    ld de, (#max_entities)
     ld d, #0x00
         repeat_man_entity_forall:
-        ;;Compare against type to know if we should continue looping -->TODO: creo que si quito este bucle igual deberia funcionar igual
+
+        ;;Compare against type to know if we should continue looping
         ld a, (hl)
         add a, #0x00 
         jr z, entity_no_valid
@@ -78,12 +112,10 @@ man_entity_forall::
 		jp (ix)
         
 		position_after_function_given:
-        ;;Add 5 to hl to move to the reach the next entity available
-        ld a, #0x07
-            repeat_inc_hl_forall:
-            inc hl
-            dec a
-        jr nz, repeat_inc_hl_forall
+
+        ;;Add entity_size to hl to move to the reach the next entity available
+        ld a, #entity_size
+        call inc_hl_number
 
         ;;Decrement a to loop among the entities
         dec e
@@ -91,9 +123,13 @@ man_entity_forall::
     entity_no_valid:
 ret
 
-;;Prerequirements
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
 ;;  -
-;;Updates entity manager by destroying all marked entities as dead
+;; Objetive: Updates the entities by destroying all marked entities as dead
+;;
+;; Modifies: a, b, de, (no se si hl pq casi siempre la reseteamos)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
 man_entity_update::
     ld hl, #m_entities
 
@@ -105,19 +141,17 @@ man_entity_update::
         ;;Compare against type to know if we should continue looping -->TODO: creo que si quito este bucle igual deberia funcionar igual
         ld a, (hl)
         add a, #0x00 
-        jr z, update_entity_no_valid
+        jr z, no_update_entity_no_valid
 
         ;;Check if the entity is marked as dead
         ld a, (hl)
-        ld b, #0x80
+        ld b, #entity_type_dead
         and b
         jr nz, destroy_dead_entity
 
-        ld a, #0x07
-            repeat_inc_hl_update:
-            inc hl
-            dec a
-        jr nz, repeat_inc_hl_update
+        ;;Increasing in entity_size to reach the next entity position
+        ld a, #entity_size
+        call inc_hl_number
         
         jr continue
 
@@ -125,39 +159,51 @@ man_entity_update::
             push de
             call man_entity_destroy
             pop de
-
         continue:
         dec e
     jr nz, repeat_man_entity_update
-    update_entity_no_valid:
+
+    no_update_entity_no_valid:
 ret
 
-;;Prerequirements
-;;      -HL should have the memory direction for the entity 
-;;Changes hl
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  - hl: should contain the memory direction for the entity
+;;
+;; Objetive: Set the type of the entity as dead
+;;
+;; Modifies: a, b
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
 man_entity_set4destruction::
     ld a, (hl)
-    ld b, #0x80
+    ld b, #entity_type_dead
 
     or b
 
-    ;;TOOD: ojo!! checkear aqui si hay que pasar a o b
     ld (hl), a
 ret
 
-;;Prerequirements
-;;      -HL should have the memory direction for the entity to be destroyed
-;;Changes hl
-man_entity_destroy:
-    ld bc, (#m_next_free_entity)
-    ld a, #0x07
-        repeat_dec:
-        dec bc
-        dec a
-    jr nz, repeat_dec
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  - hl: should contain the memory direction for the entity
 
-    ;;Hl contais the direction of the to be destroyed entity
-    ;;Bc contains the last available position -1 (-5 bytes)
+;; Objetive: Mark the dead entity as invalid and copy the last entity
+;; into the dead entity memory position, also updates the m_next_free_entity
+;; pointer
+
+;; Modifies: a, bc
+;; Returns: The number of free spaces in the A register
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
+man_entity_destroy:
+
+    ;;Hl wiil contain the direction of the entity to be destroyed entity
+
+    ;;Bc will contain the direction of the last available entity
+
+    ld bc, (#m_next_free_entity)
+
+    ld a, #entity_size
+    call dec_bc_number
 
     ;;Compare if bc and hl are the same
     ld a, c
@@ -166,10 +212,10 @@ man_entity_destroy:
     sub l
     jr z, no_copy_memory
 
-    ;;Coping memory in the free entity array space cause we destroy one entity
     ;;Saving hl in the stack
     push hl
 
+    ;;Coping memory in the free entity array space cause we destroy one entity
     ld d, h
     ld e, l
     ld h, b
@@ -177,7 +223,7 @@ man_entity_destroy:
 
     ;;Saving bc in the stack
     push bc
-    ld bc, #0x07
+    ld bc, #entity_size
 
     call cpct_memcpy_asm
 
@@ -185,25 +231,29 @@ man_entity_destroy:
     pop bc
 
     no_copy_memory:
-        ld a, #0x00
+        ;;Marked as invalid
+        ld a, #entity_type_invalid
         ld (hl), a
 
-        ;;m_next_free_entity should point one position back so
-        ;;ld de, #m_next_free_entity
+        ;;Next free entity pointing to the last available position
         ld (m_next_free_entity), hl
 
-        ;;--m_num_entities
+        ;;Decrease m_num_entities --> m_num_entities - 1
         ld a, (m_num_entities)
         dec a
         ld (m_num_entities), a
     
 ret
 
-
-;;Prerequirements
-;;  -
-;;Returns the number of free entities while available in the c register
-;;Changes bc, a
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  - 
+;; Objetive: Calculates how many spaces available are to create a new entity
+;;
+;; Modifies: a, bc
+;;
+;; Returns: The number of free spaces in the A register
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
 man_entity_free_space::
     ld a, (#max_entities)
     ld bc, (#m_num_entities)
