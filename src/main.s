@@ -60,7 +60,7 @@ _main::
 
 	;;Creates a register value entities
 	;;OJO! esta funcion esta cambiando a por eso el buclee parece qu peta
-	ld a, #0x05
+	ld a, #0x01
 		repeat:
 		call create_entity
 		dec a

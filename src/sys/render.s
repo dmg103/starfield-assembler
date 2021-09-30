@@ -1,88 +1,94 @@
 .globl man_entity_forall
 .globl cpct_getScreenPtr_asm
+.globl entity_dead
 
 ;;Prerequirements:
 ;;  Hl should have a pointer to the memory direction of the entity
 ;;Changes a, b, c 
 sys_render_one_entity:
-    ld a, #0x05
-        inc_hl:
-        inc hl
-        dec a
-    jr nz, inc_hl
-
-    ;;After inc hl five times, we are in the prevptr memory position
-    ld c, (hl)
-    ld a, #0x00
-    sub c
-    jr z, preptr_0 
-
-    ld a, (hl)
-    ld c, a
     
-    inc hl 
+    ld de, #0x06
+    add hl, de
 
-    ld a, (hl)
-    ld b, a
-
+    ;;Now hl, is pointing to the prevptr (last positioin) = 00 C8 <---------
     ld a, #0x00
-    ld (bc), a
+    ld d, (hl)
 
-    dec hl
+    sub d
 
-    preptr_0:
+    jr nz, to_erase
 
-    ;;Hl is now pointing to the prevptr of the entity
-    ld a, #0x05
-        dec_hl:
+    jr to_draw
+
+    to_erase:
+        ld b, (hl)
         dec hl
-        dec a
-    jr nz, dec_hl
+        ld c, (hl)
 
-    ;;Hl is now pointing towards the type of the entity
-    ld a, (hl)
-    ld c, #0x80
-    and c
-    jr nz, and_no_zero
+        ;;Now, de is the prevptr DE = C8 00, erase the last draw
+        ld a, #0x00
+        ld (bc), a 
+        ;;Positioning hl at the beginning of the entity
+        inc hl
 
-    push hl
+    to_draw:
 
+        dec hl
+        dec hl
+        dec hl
+        dec hl
+        dec hl
+        dec hl
+
+        ;;Now, we should check if the start is dead, hl is pointing to the beginning of the entity
+        ld a, (hl) ;;Type of the star
+        ld b, #entity_dead 
+
+        and b
+        
+        jr nz, star_dead_no_render
+
+
+    ;;The star is alive, we should render it
     ld de, #0xC000
+
     inc hl
     ld c, (hl)
     inc hl
     ld b, (hl)
+    dec hl
+    dec hl
+
+    push hl
 
     call cpct_getScreenPtr_asm
 
     ld (hl), #0x88
-
-    ;;Bc contains now the pointer to x and y in the screen memory
-    ld b, h
+    
     ld c, l
+    ld b, h
 
     pop hl
 
-    ;;After the pop hl is still pointing towards the type of the entity
-    ld a, #0x05
-        final_inc_hl:
-        inc hl
-        dec a
-    jr nz, final_inc_hl
+    ;;Now we have, BC with new prevptr, and HL is pointing to the beginnning of the entity (type)
+    ld de, #0x05
+    add hl, de
 
     ld (hl), c
+    
     inc hl
+    
     ld (hl), b
 
-    ld a, #0x06
-        final_dec_hl:
-        dec hl
-        dec a
-    jr nz, final_dec_hl
-    
-    ;;After this hl is still pointing to the entity
+    dec hl
+    dec hl
+    dec hl
+    dec hl
+    dec hl
+    dec hl
 
-    and_no_zero:
+    star_dead_no_render:
+
 ret
 
 sys_render_update::

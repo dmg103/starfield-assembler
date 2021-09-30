@@ -11,6 +11,8 @@ m_num_entities: .db 0;;Current number of entities
 
 m_function_given_forall: .dw #0x0000 ;;Memory direction of the function that we want to execute
 
+entity_dead = 0x80
+
 ;;Creates an entitiy coping zeros in their values
 ;;Intialize the pointer of the next free entity.
 ;;Changes de, a, bc, hl
