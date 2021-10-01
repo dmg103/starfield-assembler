@@ -1,5 +1,6 @@
 .globl _cpct_setPALColour
 .globl _cpct_setVideoMode
+.globl _cpct_setPalette
 .globl man_entity_forall
 .globl cpct_getScreenPtr_asm
 
@@ -9,6 +10,24 @@
 ;;Maths utilities
 .globl inc_hl_number
 .globl dec_hl_number
+
+palette::
+    .db #0x14	; 20
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
+	.db #0x0b	; 11
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Pre requirements
@@ -25,21 +44,14 @@ sys_render_init::
 	push    hl 
 	call	_cpct_setPALColour
 
-	ld hl, #0x1400
+	ld hl, #0x0010
 	push    hl 
-	call	_cpct_setPALColour
+    ld hl, #palette
+    push hl
+    call _cpct_setPalette
 ret
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Pre requirements
-;;  -
-;; Objetive: Update the render for all the entities
-;; Modifies: de
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-sys_render_update::
-    ld de, #sys_render_one_entity
-    call man_entity_forall
-ret
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Pre requirements
@@ -98,14 +110,22 @@ sys_render_one_entity:
     ld c, (hl)
     inc hl
     ld b, (hl)
+    inc hl
+    inc hl
+    ld a, (hl)
+
+    dec hl
+    dec hl
     dec hl
     dec hl
 
     push hl
+    push af
 
     call cpct_getScreenPtr_asm
 
-    ld (hl), #0x88
+    pop af
+    ld (hl), a
     
     ld c, l
     ld b, h
@@ -126,4 +146,15 @@ sys_render_one_entity:
     call dec_hl_number
 
     star_dead_no_render:
+ret
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Pre requirements
+;;  -
+;; Objetive: Update the render for all the entities
+;; Modifies: de
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+sys_render_update::
+    ld de, #sys_render_one_entity
+    call man_entity_forall
 ret
